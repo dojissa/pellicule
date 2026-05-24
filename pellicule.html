@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PELLICULE — Film Opportunities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#7c6af7;--accent-h:#8f7fff;--accent-dim:rgba(124,106,247,.13);--accent-glow:rgba(124,106,247,.22);
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --r:8px;--rsm:5px;--rlg:14px;
+  --sw:228px;--dw:376px;--hh:54px;
+  --c-labs:#a78bfa;--c-grants:#34d399;--c-festivals:#f59e0b;
+  --c-script:#60a5fa;--c-markets:#f87171;--c-residency:#fb923c;
+  --c-copro:#a3e635;--c-pitching:#e879f9;--c-training:#94a3b8;--c-dev:#38bdf8;
+}
+[data-theme="dark"]{
+  --bg:#0b0b10;--bs:#101018;--be:#16161f;--bh:#1c1c28;--ba:#22222f;
+  --bd:rgba(255,255,255,.055);--bdh:rgba(255,255,255,.11);
+  --t1:#ebebf5;--t2:#8e8ea8;--t3:#505068;--t4:#2e2e42;
+  --gop:.02;--shad:0 4px 24px rgba(0,0,0,.5);
+}
+[data-theme="light"]{
+  --bg:#f0eefa;--bs:#faf9ff;--be:#ffffff;--bh:#e9e5ff;--ba:#dfd9ff;
+  --bd:rgba(100,80,200,.09);--bdh:rgba(100,80,200,.18);
+  --t1:#1c1828;--t2:#5a5478;--t3:#9e98bc;--t4:#cdc8e4;
+  --gop:.006;--shad:0 4px 24px rgba(80,60,180,.08);
+}
+html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--font);font-size:14px;line-height:1.5;overflow:hidden;transition:background .25s,color .25s}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:var(--gop);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+
+/* Layout */
+#app{display:grid;grid-template-rows:var(--hh) 1fr;height:100vh;overflow:hidden}
+.shell{display:grid;grid-template-columns:var(--sw) 1fr;height:100%;overflow:hidden;transition:grid-template-columns .22s}
+.shell.dp-open{grid-template-columns:var(--sw) 1fr var(--dw)}
+
+/* Header */
+header{display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--bd);background:var(--bg);z-index:100}
+.logo{display:flex;align-items:center;flex-shrink:0}
+.logo-svg text{font-family:var(--mono)}
+.hdiv{width:1px;height:18px;background:var(--bd);margin:0 2px}
+.vtog{display:flex;background:var(--be);border:1px solid var(--bd);border-radius:var(--rsm);padding:2px;gap:1px}
+.vbtn{background:none;border:none;color:var(--t2);padding:4px 10px;border-radius:3px;cursor:pointer;font-size:12.5px;font-family:var(--font);font-weight:500;transition:all .14s;display:flex;align-items:center;gap:5px}
+.vbtn svg{width:12px;height:12px}.vbtn.on{background:var(--bh);color:var(--t1)}
+.hsr{flex:1;max-width:300px;margin-left:4px;position:relative}
+.hsr svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--t3);pointer-events:none}
+#searchInput{width:100%;background:var(--be);border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t1);font-family:var(--font);font-size:13px;padding:5px 10px 5px 30px;outline:none;transition:border-color .14s}
+#searchInput::placeholder{color:var(--t3)}#searchInput:focus{border-color:var(--bdh)}
+.hrt{margin-left:auto;display:flex;align-items:center;gap:6px}
+.ib{background:none;border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t2);width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .14s}
+.ib:hover{background:var(--be);color:var(--t1);border-color:var(--bdh)}.ib svg{width:14px;height:14px}
+.ib.on{background:var(--accent-dim);border-color:rgba(124,106,247,.3);color:var(--accent)}
+.sel-badge{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-dim);padding:3px 10px;border-radius:20px;border:1px solid rgba(124,106,247,.25)}
+
+/* Sidebar */
+.sb{background:var(--bg);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+.sb-s{padding:14px 10px 6px}
+.sb-l{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:0 6px;margin-bottom:4px}
+.ni{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:var(--rsm);cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:all .14s;border:none;background:none;width:100%;text-align:left}
+.ni:hover{background:var(--be);color:var(--t1)}.ni.on{background:var(--accent-dim);color:var(--accent)}
+.ni svg{width:13px;height:13px;flex-shrink:0}.ni .cnt{margin-left:auto;font-size:11px;color:var(--t3)}
+.sbdiv{height:1px;background:var(--bd);margin:6px 10px}
+.fg{padding:0 10px 10px}
+.fl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:0 4px;margin-bottom:5px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{border:1px solid var(--bd);border-radius:20px;padding:3px 8px;font-size:11.5px;font-weight:500;cursor:pointer;transition:all .13s;background:none;font-family:var(--font);color:var(--t2);white-space:nowrap}
+.chip.on{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.chip:hover:not(.on){border-color:var(--bdh);color:var(--t1)}
+/* Sidebar footer buttons */
+.sb-foot{margin-top:auto;padding:10px;display:flex;gap:6px;border-top:1px solid var(--bd)}
+.sb-footbtn{flex:1;background:none;border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t3);font-family:var(--font);font-size:11.5px;font-weight:500;padding:7px 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .14s}
+.sb-footbtn:hover{background:var(--be);color:var(--t2);border-color:var(--bdh)}.sb-footbtn svg{width:12px;height:12px}
+
+/* Content */
+.content{overflow:auto;background:var(--bg);display:flex;flex-direction:column}
+.ci{padding:18px 20px;flex:1}
+.lhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px;flex-wrap:wrap}
+.lt{font-size:12.5px;color:var(--t3)}.lt strong{color:var(--t1)}
+.lctrl{display:flex;align-items:center;gap:6px}
+.srt{background:var(--be);border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t2);font-family:var(--font);font-size:12px;padding:4px 8px;outline:none;cursor:pointer}
+.cards{display:flex;flex-direction:column;gap:5px}
+
+/* Card */
+.card{background:var(--bs);border:1px solid var(--bd);border-radius:var(--r);padding:13px 14px 13px 16px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;position:relative;display:flex;gap:10px;overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.card:hover{background:var(--be);border-color:var(--bdh);transform:translateY(-1px)}
+.card.sel{border-color:var(--accent);background:var(--be);box-shadow:0 0 0 1px var(--accent-dim)}
+.card.dsel{border-color:var(--accent)}
+.cchk{width:18px;flex-shrink:0;display:flex;align-items:flex-start;padding-top:2px}
+.chkb{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--bdh);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .13s}
+.chkb.on{background:var(--accent);border-color:var(--accent)}
+.chkb svg{width:10px;height:10px;color:#fff;opacity:0;transition:opacity .1s}.chkb.on svg{opacity:1}
+.cm{flex:1;min-width:0}
+.ctop{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
+.ctitle{font-size:13.5px;font-weight:600;color:var(--t1);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.corg{font-size:11.5px;color:var(--t3);margin-bottom:5px}
+.ctags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:7px}
+.tag{font-size:11px;padding:2px 7px;border-radius:20px;font-weight:500;border:1px solid}
+.ttype{background:var(--bh);color:var(--t2);border-color:var(--bd)}
+.tloc{background:rgba(96,165,250,.08);color:#93c5fd;border-color:rgba(96,165,250,.15)}
+.cmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mi{display:flex;align-items:center;gap:3px;font-size:11.5px;color:var(--t3)}.mi svg{width:11px;height:11px}
+.dc{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:20px;border:1px solid;white-space:nowrap}
+.d-urg{color:#ef4444;border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.09)}
+.d-soon{color:#f59e0b;border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.09)}
+.d-ok{color:#34d399;border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.09)}
+.d-roll{color:var(--t3);border-color:var(--bd)}
+.d-closed{color:var(--t3);border-color:var(--bd);opacity:.45}
+.d-approx{color:var(--t3);border-color:var(--bd);font-style:italic}
+.gamt{font-size:11.5px;font-weight:600;color:var(--accent)}
+
+/* Empty */
+.empty{text-align:center;padding:64px 20px;color:var(--t3)}
+.empty svg{width:44px;height:44px;margin:0 auto 14px;display:block;opacity:.25}
+.empty p{font-size:14px;color:var(--t2);margin-bottom:4px}.empty span{font-size:12px}
+
+/* Calendar */
+.calnav{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.cnb{background:none;border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t2);width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .13s;flex-shrink:0}
+.cnb:hover{background:var(--be);color:var(--t1)}.cnb svg{width:12px;height:12px}
+.cnt2{font-size:13.5px;font-weight:600;color:var(--t1);flex:1}
+.czm{display:flex;background:var(--be);border:1px solid var(--bd);border-radius:var(--rsm);padding:2px;gap:1px}
+.czb{background:none;border:none;color:var(--t2);padding:3px 8px;border-radius:3px;cursor:pointer;font-size:11px;font-family:var(--font);font-weight:500;transition:all .13s}
+.czb.on{background:var(--bh);color:var(--t1)}
+.mgrid{display:flex;flex-direction:column;gap:20px}
+.mb{background:var(--bs);border:1px solid var(--bd);border-radius:var(--rlg);overflow:hidden}
+.mhdr{padding:11px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.mn{font-size:13px;font-weight:600;color:var(--t1)}.mc{font-size:11px;color:var(--t3)}
+.dgrid{display:grid;grid-template-columns:repeat(7,1fr)}
+.dhdr{padding:7px 4px;text-align:center;font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid var(--bd);text-transform:uppercase}
+.dcell{height:80px;padding:4px;border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);overflow:hidden;vertical-align:top}
+.dcell:nth-child(7n){border-right:none}.dcell.other{opacity:.25}.dcell.past{opacity:.45}
+.dcell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.dn{font-size:10.5px;color:var(--t3);margin-bottom:3px;width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.ditems{display:flex;flex-direction:column;gap:2px}
+.ci-i{font-size:10px;padding:2px 5px;border-radius:3px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:500;border-left:2px solid;transition:opacity .13s;display:block;max-width:100%}
+.ci-more{font-size:9.5px;color:var(--t3);padding:1px 4px;cursor:default}
+.ci-i:hover{opacity:.75}
+.ci-i.approx{opacity:.6;border-left-style:dashed}
+
+/* Detail panel */
+.dp{background:var(--bs);border-left:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.dph{padding:15px 15px 0;flex-shrink:0;position:relative}
+.dpcl{background:none;border:none;color:var(--t3);cursor:pointer;padding:4px;border-radius:4px;transition:all .13s;display:flex;flex-shrink:0;align-self:flex-start;margin-top:1px}
+.dpcl:hover{background:var(--bh);color:var(--t1)}.dpcl svg{width:14px;height:14px}
+.dpbar{height:3px;border-radius:2px;margin-bottom:12px}
+.dp-titlerow{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:3px}
+.dptit{font-size:15px;font-weight:700;color:var(--t1);line-height:1.35;flex:1}
+.dporg{font-size:11.5px;color:var(--t3);margin-bottom:9px}
+.dptags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.dpbody{flex:1;overflow-y:auto;padding:14px}
+.dps{margin-bottom:14px}
+.dps-l{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.dps-v{font-size:12.5px;color:var(--t1);line-height:1.65}
+.dps-v a{color:var(--accent);text-decoration:none}.dps-v a:hover{text-decoration:underline}
+.dprow{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.dpkv{background:var(--be);border-radius:var(--rsm);padding:8px 11px;flex:1;min-width:96px;border:1px solid var(--bd)}
+.dpkv-l{font-size:10px;color:var(--t3);margin-bottom:2px;font-weight:500}
+.dpkv-v{font-size:12.5px;font-weight:600;color:var(--t1)}
+.dpkv-v.green{color:#34d399}.dpkv-v.amber{color:#f59e0b}.dpkv-v.purple{color:var(--accent)}
+.dpft{padding:11px 14px;border-top:1px solid var(--bd);display:flex;gap:7px;flex-shrink:0}
+.dpb{flex:1;border-radius:var(--rsm);font-family:var(--font);font-size:12.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 10px;transition:all .13s}
+.dpb svg{width:13px;height:13px}
+.dpb-site{background:var(--accent-dim);border:1px solid rgba(124,106,247,.22);color:var(--accent);text-decoration:none}
+.dpb-site:hover{background:var(--accent-glow)}
+.dpb-copy{background:var(--be);border:1px solid var(--bd);color:var(--t2)}
+.dpb-copy:hover{background:var(--bh);color:var(--t1);border-color:var(--bdh)}
+.dpb-sel{background:none;border:1px solid var(--bd);color:var(--t2)}
+.dpb-sel:hover{background:var(--bh);color:var(--t1)}
+.dpb-sel.on{background:var(--accent-dim);border-color:rgba(124,106,247,.3);color:var(--accent)}
+
+/* Export bar */
+.expbar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--be);border:1px solid var(--bdh);border-radius:40px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:10px;box-shadow:var(--shad);z-index:500;animation:su .2s ease;white-space:nowrap}
+@keyframes su{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.expbar-t{font-size:13px;color:var(--t1);font-weight:500}.expbar-t span{color:var(--accent);font-weight:700}
+.expbar-b{background:none;border:1px solid var(--bdh);border-radius:var(--rsm);color:var(--t2);width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .13s;flex-shrink:0}
+.expbar-b:hover{background:var(--bh);color:var(--t1)}
+.expbar-x{background:none;border:none;color:var(--t3);cursor:pointer;padding:6px;border-radius:50%;transition:all .13s;display:flex}
+.expbar-x:hover{background:var(--bh);color:var(--t1)}.expbar-x svg{width:14px;height:14px}
+
+/* Modal overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);animation:fo .18s ease}
+@keyframes fo{from{opacity:0}to{opacity:1}}
+.modal{background:var(--be);border:1px solid var(--bdh);border-radius:var(--rlg);padding:28px;width:460px;max-width:92vw;max-height:88vh;overflow-y:auto;position:relative;box-shadow:var(--shad)}
+.modal h3{font-size:17px;font-weight:700;color:var(--t1);margin-bottom:5px}
+.modal p{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:16px}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--t3);cursor:pointer;padding:4px;border-radius:4px;display:flex;transition:all .13s}
+.modal-close:hover{background:var(--bh);color:var(--t1)}.modal-close svg{width:16px;height:16px}
+.mfg{margin-bottom:14px}
+.mfl{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.mfl .req{color:var(--accent);font-size:10px}
+.minp{width:100%;background:var(--bh);border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t1);font-family:var(--font);font-size:13px;padding:8px 11px;outline:none;transition:border-color .14s}
+.minp:focus{border-color:var(--accent)}
+.minp::placeholder{color:var(--t3)}
+.msel{width:100%;background:var(--bh);border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t1);font-family:var(--font);font-size:13px;padding:8px 11px;outline:none;cursor:pointer}
+.mrow{display:flex;gap:8px}
+.mrow .mfg{flex:1}
+.macts{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.btn-cancel{background:none;border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t2);padding:8px 16px;font-family:var(--font);font-size:13px;cursor:pointer;transition:all .14s}
+.btn-cancel:hover{border-color:var(--bdh);color:var(--t1)}
+.btn-submit{background:var(--accent);border:none;border-radius:var(--rsm);color:#fff;padding:8px 20px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:background .13s}
+.btn-submit:hover{background:var(--accent-h)}
+/* Info modal specific */
+.info-logo{margin-bottom:20px}
+.info-section{margin-bottom:20px}
+.info-section h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:8px}
+.info-section p{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:8px}
+.info-section p:last-child{margin-bottom:0}
+.support-box{background:var(--accent-dim);border:1px solid rgba(124,106,247,.2);border-radius:var(--r);padding:16px;display:flex;align-items:center;gap:12px;margin-top:16px}
+.support-box svg{width:24px;height:24px;color:var(--accent);flex-shrink:0}
+.support-box p{font-size:12.5px;color:var(--t1);margin:0;line-height:1.55}
+.support-box a{color:var(--accent);text-decoration:none;font-weight:600}
+.support-box a:hover{text-decoration:underline}
+.info-divider{height:1px;background:var(--bd);margin:20px 0}
+.contrib-btn{background:none;border:1px solid var(--bdh);border-radius:var(--rsm);color:var(--t2);padding:8px 18px;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .14s;margin-top:4px}
+.contrib-btn:hover{background:var(--bh);color:var(--t1);border-color:var(--bdh)}
+.verified-note{font-size:11.5px;color:var(--t3);display:flex;align-items:flex-start;gap:6px;margin-top:16px;line-height:1.6}
+.verified-note svg{width:13px;height:13px;flex-shrink:0;margin-top:1px;color:var(--accent)}
+
+/* Print modal (PDF export) */
+#printModal{display:none;position:fixed;inset:0;z-index:2000;background:#fff;overflow-y:auto;padding:32px 48px;font-family:'DM Sans',sans-serif;color:#1c1828}
+#printModal .pm-actions{position:fixed;top:16px;right:16px;display:flex;gap:8px;z-index:1}
+#printModal .pm-close{background:#f0eefa;border:none;border-radius:8px;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;color:#1c1828}
+#printModal .pm-close:hover{background:#e0d8ff}
+#printModal .pm-save{background:#7c6af7;border:none;border-radius:8px;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;color:#fff}
+#printModal .pm-save:hover{background:#8f7fff}
+.pm-logo{display:flex;justify-content:center;margin-bottom:24px;padding-top:8px}
+.pm-name{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:#1c1828}
+.pm-head{margin-bottom:28px;padding-bottom:18px;border-bottom:2px solid #ebe8ff;text-align:center}
+.pm-head h1{font-size:24px;font-weight:700;color:#1c1828;margin-bottom:6px}
+.pm-head .meta{font-size:12px;color:#8e88b0}
+.pm-opp{background:#fff;border:1px solid #ebe8ff;border-radius:10px;padding:20px;margin-bottom:20px;page-break-inside:avoid;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pm-opp-head{padding-left:12px;margin-bottom:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pm-opp-title{font-size:16px;font-weight:700;color:#1c1828;margin-bottom:2px}
+.pm-opp-org{font-size:12px;color:#8e88b0}
+.pm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pm-kv{background:#f4f2ff;border-radius:6px;padding:8px 10px}
+.pm-kv-l{font-size:10px;color:#8e88b0;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.pm-kv-v{font-size:12.5px;font-weight:600;color:#1c1828}
+.pm-sect{margin-bottom:10px}
+.pm-sect-l{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8e88b0;margin-bottom:3px}
+.pm-sect-v{font-size:12.5px;color:#1c1828;line-height:1.6}
+.pm-sect-v a{color:#7c6af7;text-decoration:none}
+.pm-footer{text-align:center;margin-top:32px;padding-top:20px;border-top:1px solid #ebe8ff;font-size:11px;color:#9e98bc}
+@media print{
+  body>*{display:none!important}
+  #printModal{display:block!important;position:static;padding:0;overflow:visible}
+  #printModal .pm-actions{display:none!important}
+  @page{margin:12mm;size:A4}
+  .pm-opp{page-break-inside:avoid;break-inside:avoid;border:1px solid #ebe8ff!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--be);border:1px solid var(--bdh);border-radius:var(--r);padding:10px 16px;font-size:13px;color:var(--t1);z-index:3000;pointer-events:none;opacity:0;transition:opacity .18s;box-shadow:var(--shad)}
+.toast.show{opacity:1}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--t4);border-radius:2px}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fi .18s ease both}
+
+/* Mobile menu button — hidden on desktop */
+.hmenu{display:none;background:none;border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t2);width:34px;height:34px;align-items:center;justify-content:center;cursor:pointer;transition:all .14s;flex-shrink:0}
+.hmenu:hover{background:var(--be);color:var(--t1)}.hmenu svg{width:15px;height:15px}
+/* Sidebar scrim */
+.sb-scrim{position:fixed;inset:0;top:var(--hh);background:rgba(0,0,0,.48);z-index:300;opacity:0;pointer-events:none;transition:opacity .22s}
+.sb-scrim.is-open{opacity:1;pointer-events:all}
+/* Detail panel drag handle — hidden on desktop */
+.dp-handle{display:none;width:36px;height:4px;background:var(--t3);border-radius:2px;margin:10px auto 2px;flex-shrink:0}
+/* Sidebar action buttons (mobile only) */
+.sb-actions{display:none;padding:10px 10px 0;gap:6px;border-top:1px solid var(--bd)}
+.sb-action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:none;border:1px solid var(--bd);border-radius:var(--rsm);color:var(--t2);font-family:var(--font);font-size:12px;font-weight:500;cursor:pointer;transition:all .14s}
+.sb-action-btn:hover{background:var(--be);color:var(--t1)}
+.sb-action-btn.on{background:var(--accent-dim);border-color:rgba(124,106,247,.3);color:var(--accent)}
+.sb-action-btn svg{width:14px;height:14px}
+/* Mobile calendar styles */
+.cal-strip{display:flex;gap:5px;overflow-x:auto;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--bd);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.cal-strip::-webkit-scrollbar{display:none}
+.cs-pill{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 10px;border-radius:var(--r);border:1px solid var(--bd);background:none;cursor:pointer;font-family:var(--font);flex-shrink:0;min-width:54px;transition:all .14s}
+.cs-pill.on{background:var(--accent-dim);border-color:var(--accent)}
+.cs-lbl{font-size:12px;font-weight:600;color:var(--t2)}
+.cs-pill.on .cs-lbl{color:var(--accent)}
+.cs-dot{width:5px;height:5px;border-radius:50%;background:var(--t4)}
+.cs-dot.has-dl{background:var(--accent)}
+.cs-pill.on .cs-dot.has-dl{background:var(--accent)}
+.agenda-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.agenda-head-title{flex:1;text-align:center;font-size:15px;font-weight:600;color:var(--t1)}
+.agenda-slbl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin:12px 0 7px;padding-left:2px}
+.agenda-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bs);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:5px;cursor:pointer;transition:background .14s;overflow:hidden}
+.agenda-item:hover{background:var(--be)}
+.agenda-cat{width:3px;height:32px;border-radius:2px;flex-shrink:0}
+.agenda-info{flex:1;min-width:0}
+.agenda-name{font-size:13px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agenda-sub{font-size:11.5px;color:var(--t3);margin-top:2px}
+.agenda-empty{text-align:center;padding:28px 12px;color:var(--t3);font-size:13px;line-height:1.6}
+
+/* ── MOBILE ≤640px ──────────────────────────────────────────────────────── */
+@media(max-width:640px){
+  :root{--hh:54px}
+  /* Header: logo left, search middle, burger RIGHT */
+  .hmenu{display:flex;order:10}
+  .logo{order:1}
+  .hdiv{display:none}
+  .vtog{display:none}
+  .hsr{order:5;flex:1;min-width:0;max-width:none}
+  .hrt{display:none}
+  /* Logo: bigger, readable */
+  .logo svg{width:118px!important;height:28px!important}
+  /* Show view toggle icon between logo and search */
+  .mob-vtog{display:flex!important;order:2}
+  .hsr{order:5}
+  /* Grid: single column always */
+  .shell,.shell.dp-open{grid-template-columns:1fr!important}
+  /* Sidebar: slides from RIGHT (matches right-side burger) */
+  .sb{position:fixed;top:var(--hh);right:0;left:auto;bottom:0;width:min(300px,90vw);z-index:400;transform:translateX(110%);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 40px rgba(0,0,0,.35);overflow-y:auto}
+  .sb.is-open{transform:translateX(0)}
+  /* Show action buttons inside sidebar */
+  .sb-actions{display:flex}
+  /* Detail panel: bottom sheet */
+  .dp{position:fixed;inset:auto 0 0 0;width:100%!important;max-height:88vh;border-left:none;border-top:1px solid var(--bd);border-radius:16px 16px 0 0;z-index:350;animation:slideUp .26s ease}
+  .dp-handle{display:block}
+  .dph{padding-top:8px}
+  /* Spacing */
+  .ci{padding:12px 14px}
+  .card{padding:10px 12px 10px 14px}
+  .ctitle{font-size:13px}
+  /* Export bar safe area */
+  .expbar{bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}
+  /* Modals */
+  .modal{width:94vw;max-height:90vh;padding:20px}
+  /* Sidebar footer */
+  .sb-foot{flex-direction:column;gap:4px}
+}
+/* ── TABLET 641-1024px ──────────────────────────────────────────────────── */
+@media(min-width:641px) and (max-width:1024px){
+  :root{--sw:196px;--dw:320px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="printModal"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const CATS={
+  labs:{label:'Lab',color:'#a78bfa'},grants:{label:'Grant',color:'#34d399'},
+  festivals:{label:'Festival',color:'#f59e0b'},script:{label:'Script Dev',color:'#60a5fa'},
+  markets:{label:'Market',color:'#f87171'},residency:{label:'Residency',color:'#fb923c'},
+  copro:{label:'Co-Production',color:'#a3e635'},pitching:{label:'Pitching',color:'#e879f9'},
+  training:{label:'Training',color:'#94a3b8'},development:{label:'Development',color:'#38bdf8'},
+};
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTH_MAP={january:0,february:1,march:2,april:3,may:4,june:5,july:6,august:7,september:8,october:9,november:10,december:11};
+
+const DB=[
+  {id:'o01',title:'Sundance Institute',org:'Sundance Institute',types:['Feature'],cat:'development',locs:['US','International'],fee:0,dl:null,dlLabel:'January & July',dlType:'multiple',grant:'Up to $20,000',desc:'Film Development & Production support for independent filmmakers through labs covering development, production and post-production.',elig:'Independent filmmakers worldwide',req:'Varies by programme. Check individual lab requirements on the website.',web:'sundance.org',contact:'institute@sundance.org'},
+  {id:'o02',title:'Creative Europe MEDIA',org:'European Commission',types:['Feature','Short','Documentary'],cat:'grants',locs:['EU'],fee:0,dl:null,dlLabel:'Multiple calls yearly',dlType:'multiple',grant:'Up to €60,000',desc:'Production and distribution support for European audiovisual works through the MEDIA sub-programme of Creative Europe.',elig:'EU-based production companies',req:'Must meet EU content criteria. Full applications via the Creative Europe portal.',web:'ec.europa.eu/media',contact:'MEDIA Help Desk'},
+  {id:'o03',title:'Nipkow Program',org:'Nipkow Programm',types:['Feature','Documentary'],cat:'residency',locs:['International','EU'],fee:0,dl:null,dlLabel:'Early January (annual)',dlType:'multiple',grant:'€1,500/month (up to 3 months)',desc:'Six-month full-time development residency in Berlin (June–November) for international film and media professionals. Fellows develop feature film projects with one-to-one mentoring, industry workshops, and networking. Travel and accommodation not covered.',elig:'Professional writers, directors, producers or animators with at least one completed feature film (70+ min). Applicants without a feature may qualify if a short film won an award at Berlin, Cannes, Locarno, Sundance, Toronto or Venice.',req:'Project must be a new feature-length project (fiction, documentary or animation) destined for theatrical release. At least a first-draft script or developed treatment in English. Full application via nipkow.de.',web:'nipkow.de',contact:'info@nipkow.de'},
+  {id:'o04',title:'Berlinale Co-Production Market',org:'Berlinale',types:['Feature','Documentary'],cat:'markets',locs:['International'],fee:150,dl:'2025-10-15',dlLabel:'October',dlType:'fixed',grant:'N/A',desc:'Project pitching platform connecting filmmakers with international co-production partners at the Berlin International Film Festival.',elig:'Projects with 30% financing in place',req:'Completed application, project synopsis, financial plan, director\'s note.',web:'berlinale.de',contact:'copro@berlinale.de'},
+  {id:'o05',title:'Rotterdam Lab (IFFR)',org:'IFFR',types:['Feature','Documentary'],cat:'development',locs:['International'],fee:0,dl:null,dlLabel:'December',dlType:'fixed',grant:'Varies',desc:'Project development support programme for emerging producers at the International Film Festival Rotterdam.',elig:'Emerging producers',req:'Project in early development, producer profile and dossier.',web:'iffr.com',contact:'rotterdamlab@iffr.com'},
+  {id:'o06',title:'Sarajevo Film Festival',org:'SFF',types:['Short','Documentary'],cat:'training',locs:['SE Europe'],fee:0,dl:null,dlLabel:'March',dlType:'fixed',grant:'N/A',desc:'Talent Campus and CineLink industry programme with workshops, pitching and meetings for Southeast European filmmakers.',elig:'Southeast European filmmakers',req:'Project in development, director and producer CVs.',web:'sff.ba',contact:'industry@sff.ba'},
+  {id:'o07',title:'XPOSED Film Fund',org:'XPOSED Queer Film Festival Berlin',types:['Short'],cat:'grants',locs:['International'],fee:0,dl:'2026-05-10',dlLabel:'May 10th',dlType:'fixed',grant:'Up to €1,500 cash prize',desc:'Grant supporting queer short film production from LGBTQ+ filmmakers worldwide.',elig:'LGBTQ+ filmmakers',req:'Submit project via email. See website for full submission guidelines.',web:'xposedfilmfestival.com',contact:'fund@xposedfilmfestival.com'},
+  {id:'o08',title:'Onassis Foundation',org:'Onassis Foundation',types:['Feature','Documentary','Short'],cat:'grants',locs:['International'],fee:0,dl:null,dlLabel:'Rolling',dlType:'rolling',grant:'Varies',desc:'Emergency grants for Greek and international artists in need of urgent support. Rolling call throughout the year.',elig:'Greek & International artists',req:'Application submitted online. Emergency nature must be demonstrated.',web:'onassis.org',contact:'emergencygrants@onassis.org'},
+  {id:'o09',title:'European Short Pitch',org:'European Short Pitch',types:['Short'],cat:'script',locs:['EU'],fee:0,dl:null,dlLabel:'September (annual, for following year)',dlType:'fixed',grant:'N/A',desc:'Training and co-production pitching platform for European short film screenwriters. Development workshop in January (online), followed by a Co-production Forum in May/June at Leiden Shorts. 12 projects selected. Separate Works in Progress section also available for films in post-production.',elig:'Individual authors or creative teams (writers, directors, producers) developing international short film projects. Projects must be EU co-productions. Working language: English.',req:'Application via europeanshortpitch.org. Script/treatment, project presentation. Note: the 2026 call closed September 2025 — next call opens September 2026.',web:'europeanshortpitch.org',contact:'info@europeanshortpitch.com'},
+  {id:'o10',title:'Medienboard Berlin-Brandenburg',org:'Medienboard Berlin-Brandenburg',types:['Feature','Documentary','Short'],cat:'grants',locs:['Germany'],fee:0,dl:null,dlLabel:'Multiple deadlines',dlType:'multiple',grant:'Varies',desc:'Regional film fund supporting Berlin and Brandenburg-based productions across development, production and distribution.',elig:'Berlin-based productions',req:'Projects with significant Berlin/Brandenburg connection. Applications via medienboard portal.',web:'medienboard.de',contact:'info@medienboard.de'},
+  {id:'o11',title:'Clermont-Ferrand Short Film Market',org:'Clermont-Ferrand',types:['Short'],cat:'markets',locs:['International'],fee:95,dl:null,dlLabel:'October',dlType:'fixed',grant:'N/A',desc:'One of the world\'s largest short film markets, alongside the Clermont-Ferrand International Short Film Festival.',elig:'Short film professionals',req:'Registration and accreditation required.',web:'clermont-filmfest.org',contact:'market@clermont-filmfest.org'},
+  {id:'o12',title:'Oxbelly Screenwriters Program',org:'Oxbelly Retreat',types:['Feature'],cat:'labs',locs:['International'],fee:0,dl:null,dlLabel:'14 January (annual)',dlType:'fixed',grant:'Fully funded (flights, accommodation, meals)',desc:'Eight-day intensive screenwriting residency in Messinia, Greece (Costa Navarino), led by internationally acclaimed filmmakers. First four days are one-on-one sessions with experienced writer-director advisors; second half expands to industry guests, interdisciplinary sessions and peer exchange. All expenses covered.',elig:'Writer-directors applying with their SECOND fiction feature film. Must have written and directed a debut feature. Greek and international applicants, 18+.',req:'Project synopsis, writer\'s statement, treatment, full script, sample of debut feature film, mood board (optional). Apply via oxbelly.com.',web:'oxbelly.com',contact:'contact@oxbelly.com'},
+  {id:'o13',title:'IDM Film Fund Südtirol',org:'IDM Südtirol',types:['Feature','Documentary'],cat:'grants',locs:['International'],fee:0,dl:null,dlLabel:'Multiple calls',dlType:'multiple',grant:'Up to €1.5M',desc:'Regional film fund for international productions with a connection to South Tyrol.',elig:'International productions with South Tyrol connection',req:'Production must demonstrate significant South Tyrol link. Full dossier required.',web:'film.idm-suedtirol.com',contact:'filmfunding@idm-suedtirol.com'},
+  {id:'o14',title:'Netherlands Film Fund',org:'Nederlands Filmfonds',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Multiple deadlines',dlType:'multiple',grant:'Up to €50,000',desc:'International co-production support for projects with Dutch involvement.',elig:'International productions with Dutch co-producer',req:'Dutch co-producer attached. Full project dossier and financial plan.',web:'filmfonds.nl',contact:'info@filmfonds.nl'},
+  {id:'o15',title:'Danish Film Institute',org:'Det Danske Filminstitut',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Quarterly',dlType:'multiple',grant:'Varies',desc:'Minority co-production support for international projects with a Danish partner.',elig:'International productions with Danish co-producer',req:'Danish co-producer attached, project in development or production.',web:'dfi.dk',contact:'dfi@dfi.dk'},
+  {id:'o16',title:'Film i Väst',org:'Film i Väst',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Rolling',dlType:'rolling',grant:'Up to €300,000',desc:'Co-production support for international productions connected to West Sweden. Rolling submissions accepted.',elig:'International productions',req:'Project with connection to West Sweden region.',web:'filmivast.se',contact:'info@filmivast.se'},
+  {id:'o17',title:'CNC France',org:'Centre National du Cinéma',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Multiple calls',dlType:'multiple',grant:'Up to €500,000',desc:'French international co-production support for projects involving a French producer or French creative elements.',elig:'International productions with French co-producer',req:'French co-producer required. Applications via CNC portal.',web:'cnc.fr',contact:'info@cnc.fr'},
+  {id:'o18',title:'Screen Ireland',org:'Screen Ireland',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Quarterly',dlType:'multiple',grant:'Up to €250,000',desc:'International production funding for projects with Irish co-production partners.',elig:'International productions with Irish co-producer',req:'Irish producer attached, full application dossier.',web:'screenireland.ie',contact:'info@screenireland.ie'},
+  {id:'o19',title:'Polish Film Institute',org:'PISF',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Bi-annual',dlType:'multiple',grant:'Varies',desc:'Minority co-production support for international projects with a Polish partner company.',elig:'International productions with Polish co-producer',req:'Polish producer attached. Two calls per year.',web:'pisf.pl',contact:'pisf@pisf.pl'},
+  {id:'o20',title:'Finnish Film Foundation',org:'Suomen elokuvasäätiö',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Multiple deadlines',dlType:'multiple',grant:'Up to €150,000',desc:'International co-production funding for projects with Finnish involvement.',elig:'International productions with Finnish co-producer',req:'Finnish producer attached, full production plan.',web:'ses.fi',contact:'info@ses.fi'},
+  {id:'o21',title:'Austrian Film Institute',org:'Österreichisches Filminstitut',types:['Feature'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Three annual deadlines',dlType:'multiple',grant:'Up to €200,000',desc:'Feature film production support with preference for international co-productions involving Austrian partners.',elig:'International productions with Austrian co-producer',req:'Austrian producer attached. Three calls per year.',web:'filminstitut.at',contact:'office@filminstitut.at'},
+  {id:'o22',title:'Screen Brussels Fund',org:'Screen.Brussels',types:['Feature','Documentary','Short'],cat:'grants',locs:['EU'],fee:0,dl:null,dlLabel:'Quarterly',dlType:'multiple',grant:'Up to €500,000',desc:'Production support for Brussels-region productions. Quarterly calls across development, production and post.',elig:'Brussels-region productions',req:'Production company based in Brussels Capital Region.',web:'screen.brussels',contact:'info@screen.brussels'},
+  {id:'o23',title:'Norwegian Film Institute',org:'Norsk filminstitutt',types:['Feature','Documentary'],cat:'copro',locs:['International'],fee:0,dl:null,dlLabel:'Three annual deadlines',dlType:'multiple',grant:'Up to €400,000',desc:'International co-production support for projects with Norwegian partners.',elig:'International productions with Norwegian co-producer',req:'Norwegian producer attached, full dossier.',web:'nfi.no',contact:'post@nfi.no'},
+  {id:'o24',title:'Interfilm Script Pitch',org:'Interfilm Berlin',types:['Short'],cat:'labs',locs:['International'],fee:0,dl:'2026-06-22',dlLabel:'22 June 2026',dlType:'fixed',grant:'€2,000 + CineSud ShortLab',desc:'International Script Pitch at INTERFILM 42 Berlin. Script Lab + Pitch Training + Competition in front of an international jury. In person Berlin Nov 10–14 2026. Accommodation covered by INTERFILM.',elig:'International screenwriters of short fiction or animation (max 20 pages, in English)',req:'Completed form, script PDF (max 20 pages, English), project presentation incl. 1–2 page outline, character descriptions, mood/concept art, writer\'s note.',web:'interfilm.filmchief.com/submit-film/script-pitch-2026',contact:'scriptpitch@interfilm.de'},
+  {id:'o25',title:'Drama Pitching Lab',org:'Drama',types:['Short','Documentary'],cat:'pitching',locs:['International'],fee:0,dl:'2026-04-30',dlLabel:'April 30th',dlType:'fixed',grant:'Cash prizes',desc:'Five-day intensive pitching workshop for international directors and screenwriters, pitching to industry professionals.',elig:'International directors, screenwriters',req:'Logline (max 4 lines), synopsis, director note, CV.',web:'dramafilmfest.com',contact:'info@drama.org'},
+  {id:'o26',title:'Sarajevo Talents',org:'SFF',types:['Feature','Documentary','Short'],cat:'training',locs:['SE Europe'],fee:0,dl:'2026-04-06',dlLabel:'April 6th',dlType:'fixed',grant:'N/A',desc:'Talent development for emerging filmmakers from SE Europe. Programme held during Sarajevo Film Festival, Aug 16–21.',elig:'Filmmakers from Albania, Armenia, Azerbaijan and SE European countries',req:'Film project in development, CV, letter of motivation.',web:'sff.ba',contact:'talents_sarajevo@sff.ba'},
+  {id:'o27',title:'Festival of Animation Berlin',org:'FA|Berlin',types:['Short','Feature'],cat:'pitching',locs:['International'],fee:0,dl:'2026-05-15',dlLabel:'15 May 2026',dlType:'fixed',grant:'N/A',desc:'Pitching lab for all animation projects. Participants present to distributors, producers and commissioning editors.',elig:'Animation filmmakers — all formats',req:'Online form with project details.',web:'fa-berlin.com',contact:'info@fa-berlin.com'},
+  {id:'o28',title:'Locarno Residency',org:'Locarno Film Festival',types:['Feature'],cat:'residency',locs:['International'],fee:0,dl:'2026-06-05',dlLabel:'5 June 2026',dlType:'fixed',grant:'Expenses covered + mentoring',desc:'Development residency for first-time feature filmmakers. Phase 1: 10 selected participants attend Locarno Film Festival (Aug 5–8, 2026) and discuss their project with an industry jury. Three are then selected for Phase 2: a full year of mentoring with in-person sessions in Italy and Arles. Travel and accommodation covered throughout. Competitive — two phases, ten → three.',elig:'Filmmakers developing their first fiction feature film. Non-French required for similar Cannes programme. Must not be a previous Locarno Residency participant.',req:'Completed online application form, film project treatment, CV, director statement. Apply at locarnofestival.ch/factory/residency.',web:'locarnofestival.ch/about/factory/residency.html',contact:'residency@locarnofestival.ch'},
+  {id:'o29',title:'QueerScope Debut Film Award',org:'QueerScope',types:['Short'],cat:'festivals',locs:['International'],fee:0,dl:null,dlLabel:'Varies',dlType:'multiple',grant:'Award',desc:'Award for debut short films with LGBTQ+ themes. Open to international debut filmmakers.',elig:'International debut filmmakers',req:'Check queerscope.de for current submission guidelines.',web:'queerscope.de',contact:'info@queerscope.de'},
+  {id:'o30',title:'QueerScope Film Fund',org:'QueerScope',types:['Short','Feature'],cat:'grants',locs:['Germany'],fee:0,dl:null,dlLabel:'Varies',dlType:'multiple',grant:'Varies',desc:'Development and production fund for German residents working on LGBTQ+ themed projects.',elig:'German residents',req:'Full project dossier including script or treatment, budget, CV.',web:'queerscope.de',contact:'info@queerscope.de'},
+  {id:'o31',title:'MASO Script Lab',org:'MASO',types:['Short','Feature'],cat:'labs',locs:['International'],fee:0,dl:null,dlLabel:'Varies',dlType:'multiple',grant:'N/A',desc:'Script lab for creative duos — author and director pairs. Norway-based with international participants.',elig:'Creative duos — author and director partnerships',req:'Project proposal, both CVs, sample of previous work.',web:'maso-lab.com',contact:'info@maso-lab.com'},
+  {id:'o32',title:'Goethe-Institut Cyprus',org:'Goethe-Institut',types:['Feature','Documentary','Short'],cat:'grants',locs:['EU'],fee:0,dl:null,dlLabel:'Quarterly',dlType:'multiple',grant:'Varies',desc:'Cultural exchange and film support for Cyprus-based artists through the Goethe-Institut network.',elig:'Cyprus-based artists/filmmakers',req:'Project proposal, CV, budget outline.',web:'goethe.de/cyprus',contact:'info-nicosia@goethe.de'},
+  // ── NEW VERIFIED ENTRIES ──────────────────────────────────────────────────
+  {id:'o43',title:'MIDPOINT Shorts',org:'MIDPOINT Institute',types:['Short'],cat:'labs',locs:['International'],fee:50,dl:'2026-06-15',dlLabel:'15 June 2026',dlType:'fixed',grant:'Development support + showcase',desc:'Complex development programme for short film projects combining creative dramaturgy, distribution strategy, presentation skills and industry showcase. Two residential workshops (Brno, Czech Republic in October; Trieste, Italy in January) plus an online feedback session for ~20 shortlisted projects. Selected 8 teams participate in both workshops and showcase at When East Meets West co-production forum. Supported by the Czech Film Fund and Ministry of Culture. Partners include Cannes Court Metrage.',elig:'Teams of writers, directors and producers with a short film project in development. International applicants welcome.',req:'Online application via midpoint-institute.eu. €50 entry fee per project for the Online Feedback Session (July 29–31, 2026). €1,000 per participant for Workshop 1+2 (includes accommodation, board and tuition; travel not covered).',web:'midpoint-institute.eu/en/detail/midpoint-shorts-2026-2027-39J7Kw',contact:'info@midpoint-institute.eu'},
+  {id:'o44',title:'Shore Scripts Short Film Fund',org:'Shore Scripts',types:['Short'],cat:'grants',locs:['International'],fee:0,dl:null,dlLabel:'Opens January annually (2026 closed)',dlType:'multiple',grant:'$15,000 production grant or $4,000 finishing fund',desc:'One of the most successful short film script competitions globally. Production Grant winner receives $15,000 cash, mentorship with twice Oscar-nominated producer Maria Gracia Turgeon, free ARRI camera equipment rental, festival strategy package from Tribeca programmer, and industry connections. Finishing Fund winner receives $4,000 for films already in production. Alumni films have screened at Sundance, Tribeca, Cannes, BFI London and won a BAFTA.',elig:'International writers, directors and producers. Narrative short films (live-action and animation), web series pilots, and proof-of-concept shorts. 2026 season closed — opens January 2027.',req:'Script submitted via shorescripts.com. Entry fee applies (varies by deadline tier). Accepts narrative scripts only — no documentary scripts.',web:'shorescripts.com/shortfilmfund',contact:'via shorescripts.com/contact-page'},
+  {id:'o33',title:'Eurimages Co-Production Fund',org:'Council of Europe',types:['Feature','Documentary'],cat:'copro',locs:['EU','International'],fee:0,dl:null,dlLabel:'Three deadlines per year',dlType:'multiple',grant:'Varies (soft loans / subsidies)',desc:'The Council of Europe\'s main film support fund, backing international co-productions between member states. Three submission windows annually. Supports fiction, animation and documentary features of 70+ minutes intended for cinema release.',elig:'International co-productions between at least two independent producers in different Eurimages member states. Each co-producer must have at least 50% financing in place at the time of application.',req:'Full application via the Eurimages online submission platform. Project must have prior support from at least one film fund, distributor or TV presale. Principal photography must not have started.',web:'coe.int/en/web/eurimages/coproduction',contact:'eurimages@coe.int'},
+  {id:'o34',title:'Berlinale World Cinema Fund',org:'Berlinale / German Federal Cultural Foundation',types:['Feature','Documentary'],cat:'grants',locs:['International'],fee:0,dl:'2026-06-22',dlLabel:'Opens 22 June 2026',dlType:'fixed',grant:'Up to €300,000',desc:'One of Europe\'s most important film funds for filmmakers from underrepresented regions: Latin America, Caribbean, Pacific, Africa, Middle East, Central and Southeast Asia, Caucasus, Bangladesh, Nepal, Mongolia and Sri Lanka. Supports production and post-production.',elig:'Film production companies from the WCF regions, or German companies with a director from those regions. Project must be a feature film with strong artistic merit.',req:'Submit via berlinale.de/wcf once the portal opens June 22, 2026. Script/treatment, financing plan, director statement, producer CV.',web:'berlinale.de/en/wcf/home/welcome.html',contact:'wcf@berlinale.de'},
+  {id:'o35',title:'TorinoFilmLab FeatureLab',org:'TorinoFilmLab / Museo Nazionale del Cinema',types:['Feature','Documentary'],cat:'labs',locs:['International'],fee:0,dl:'2026-07-03',dlLabel:'3 July 2026',dlType:'fixed',grant:'Production grants at TFL Meeting Event',desc:'Intensive development programme for 1st and 2nd feature films from all over the world. 10 director-producer teams selected for three workshops from June to November, culminating at the TFL Meeting Event in Turin where projects are presented to industry and assessed by an international jury awarding production grants.',elig:'Director-producer teams (scriptwriter may be included) developing 1st or 2nd feature film — fiction, documentary, experimental, animation. At least a first draft of the script in English required.',req:'Apply via TorinoFilmLab Visitor Portal (vp.eventival.com/torinofilmlab/tfl). Script/treatment, financing plan, director and producer CVs, project presentation.',web:'torinofilmlab.it/labs/featurelab',contact:'info@torinofilmlab.it'},
+  {id:'o36',title:'TorinoFilmLab ScriptLab',org:'TorinoFilmLab / Museo Nazionale del Cinema',types:['Feature','Documentary'],cat:'script',locs:['International'],fee:0,dl:null,dlLabel:'December (annual)',dlType:'fixed',grant:'N/A',desc:'Script development programme for early-stage feature projects — fiction, documentary, experimental or animation. Five modules from April to November including residential workshops in partner cities and the TFL Meeting Event in Turin. For projects where the script is not yet drafted.',elig:'Writer-directors (or writer-director teams) from anywhere in the world. Projects must be at an early development stage — existing script drafts are not eligible.',req:'Project concept/outline, director statement, sample of previous work. Annual call typically opens October for following year. Apply via torinofilmlab.it.',web:'torinofilmlab.it/labs/scriptlab---story-editing',contact:'info@torinofilmlab.it'},
+  {id:'o37',title:'Cannes La Résidence',org:'Festival de Cannes',types:['Feature'],cat:'residency',locs:['International'],fee:0,dl:'2026-05-31',dlLabel:'31 May 2026',dlType:'fixed',grant:'Accommodation, workspace, mentoring',desc:'Four-and-a-half month script development residency in Paris for young filmmakers developing their first or second fiction feature. 52nd session runs October 2026 – February 2027. Participants attend the Cannes Film Festival and receive mentoring from industry professionals throughout.',elig:'Filmmakers with at least one short film and no more than one feature. Must NOT be French citizens or residents.',req:'Application via the "My Account" portal at festival-cannes.com. Treatment for upcoming feature, CV, sample films submitted for review.',web:'cinemadedemain.festival-cannes.com/en/take-part/register-to-the-residence/',contact:'residence@festival-cannes.fr'},
+  {id:'o38',title:'IDFA Forum',org:'International Documentary Film Festival Amsterdam',types:['Documentary'],cat:'pitching',locs:['International'],fee:0,dl:null,dlLabel:'June (annual)',dlType:'fixed',grant:'Various co-production awards',desc:'The world\'s leading documentary pitching and co-production platform, held annually in November alongside IDFA. Brings together filmmakers with broadcasters, distributors and funds. Projects pitched in both a public and private format. Awards distributed across various categories.',elig:'International documentary projects in development or production. Director and producer team required. Strong preference for projects with a confirmed distributor or broadcaster interest.',req:'Project presentation, treatment, finance plan, director CV. Apply via idfa.nl in summer. Fee may apply for some application categories.',web:'idfa.nl/en/industry/forum',contact:'forum@idfa.nl'},
+  {id:'o39',title:'Hot Docs Forum',org:'Hot Docs Canadian International Documentary Festival',types:['Documentary'],cat:'pitching',locs:['International'],fee:0,dl:null,dlLabel:'January (annual)',dlType:'fixed',grant:'Various awards',desc:'North America\'s leading documentary pitching and co-production forum, held annually in Toronto in May. Projects pitch to an invitation-only audience of commissioning editors, broadcasters, distributors and funds. One of the most competitive documentary forums globally.',elig:'International documentary projects in development. Director and producer team required.',req:'Application in January. Project treatment, director statement, finance plan, sample material. Apply via hotdocs.ca.',web:'hotdocs.ca/industry/hot-docs-forum',contact:'industry@hotdocs.ca'},
+  {id:'o40',title:'Thessaloniki International Film Festival — Crossroads',org:'Thessaloniki International Film Festival',types:['Feature','Documentary'],cat:'markets',locs:['International'],fee:0,dl:null,dlLabel:'July (annual)',dlType:'fixed',grant:'Co-production awards',desc:'Crossroads Co-production Forum, held alongside the Thessaloniki International Film Festival in November. Projects are pitched to an international jury of producers, sales agents and fund representatives. Awards distributed at the closing ceremony.',elig:'International feature and documentary projects in development. Director-producer team required.',req:'Project dossier including treatment, director bio, production notes. Apply via filmfestival.gr in summer.',web:'filmfestival.gr/en/industry/crossroads',contact:'agora@filmfestival.gr'},
+  {id:'o41',title:'Goteborg Film Festival — Nordic Film Market',org:'Göteborg Film Festival',types:['Feature','Documentary'],cat:'markets',locs:['International','EU'],fee:0,dl:null,dlLabel:'October (annual)',dlType:'fixed',grant:'Market accreditation + networking',desc:'The Nordic countries\' leading film industry event, held alongside the Göteborg Film Festival in January/February. Includes the Works in Progress screenings, co-production meetings, and industry seminars. Strong focus on Nordic-international co-productions.',elig:'International filmmakers with projects in development, production or post-production.',req:'Application via giff.se. Project dossier with treatment, production details, financing plan.',web:'giff.se/industry',contact:'industry@giff.se'},
+  {id:'o42',title:'Clermont-Ferrand Euro Connection',org:'Clermont-Ferrand International Short Film Festival',types:['Short'],cat:'markets',locs:['EU'],fee:0,dl:null,dlLabel:'October (annual)',dlType:'fixed',grant:'Travel support + accreditation',desc:'European co-production forum for short films and XR projects, held at Clermont-Ferrand in February. Producers from associated European countries pitch to an international selection, with one-to-one meetings, pitch workshops and networking. 142 films completed since its launch including 77 international co-productions.',elig:'Producers with a company based in an associated Euro Connection country. Short film (animation, fiction, creative doc) max length varies by edition. Shooting must not start before June of that year.',req:'Apply through your national correspondent (in Portugal via IndieLisboa or Curtas; varies by country). Single PDF application. Annual call opens September/October.',web:'clermont-filmfest.org/pro/euroconnection',contact:'euroconnection@clermont-filmfest.org'},
+];
+
+// Parse approximate month dates from dlLabel
+function approxDates(o){
+  if(o.dl||o.dlType==='rolling') return [];
+  const label=(o.dlLabel||'').toLowerCase();
+  const results=[];
+  const now=new Date(); const cy=now.getFullYear(); const cm=now.getMonth();
+  for(const [name,num] of Object.entries(MONTH_MAP)){
+    if(label.includes(name)){
+      // Pick the next upcoming occurrence
+      let y=cy;
+      if(num<cm||(num===cm&&now.getDate()>20)) y=cy+1;
+      results.push({date:new Date(y,num,15),approx:true,opp:o});
+    }
+  }
+  return results;
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const S={
+  view:'list',selId:null,
+  nav:'all',
+  f:{search:'',cat:new Set(),loc:'all',fee:'all',dl:'all',active:false},
+  sort:'deadline',
+  calM:new Date().getMonth(),calY:new Date().getFullYear(),calZ:3,
+  selMode:false,selected:new Set(),
+  theme:localStorage.getItem('pell_theme')||'light',
+  modal:null,
+  sbOpen:false,
+};
+document.documentElement.setAttribute('data-theme',S.theme);
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const cat=c=>CATS[c]||{label:c,color:'#94a3b8'};
+
+function dlInfo(o){
+  if(o.dlType==='rolling') return{label:'Rolling',cls:'d-roll',days:null,open:true};
+  if(!o.dl) return{label:o.dlLabel||'TBC',cls:'d-roll',days:null,open:true};
+  const d=new Date(o.dl),now=new Date();now.setHours(0,0,0,0);
+  const days=Math.round((d-now)/864e5);
+  if(days<0) return{label:'Closed',cls:'d-closed',days,open:false};
+  if(days===0) return{label:'Today!',cls:'d-urg',days,open:true};
+  if(days<=7) return{label:`${days}d left`,cls:'d-urg',days,open:true};
+  if(days<=30) return{label:`${days}d`,cls:'d-soon',days,open:true};
+  const mo=d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  return{label:mo,cls:'d-ok',days,open:true};
+}
+
+function allLocs(){const s=new Set();DB.forEach(o=>o.locs.forEach(l=>s.add(l)));return[...s].sort();}
+
+function filtered(){
+  let list=[...DB];
+  const f=S.f;
+  if(f.active||S.nav==='open') list=list.filter(o=>dlInfo(o).open);
+  if(S.nav==='upcoming') list=list.filter(o=>{const d=dlInfo(o);return d.days!==null&&d.days>=0&&d.days<=30;});
+  if(f.search){const q=f.search.toLowerCase();list=list.filter(o=>o.title.toLowerCase().includes(q)||o.org.toLowerCase().includes(q)||o.desc.toLowerCase().includes(q)||o.types.some(t=>t.toLowerCase().includes(q)));}
+  if(f.cat.size>0) list=list.filter(o=>f.cat.has(o.cat));
+  if(f.loc!=='all') list=list.filter(o=>o.locs.includes(f.loc));
+  if(f.fee==='free') list=list.filter(o=>o.fee===0);
+  if(f.fee==='paid') list=list.filter(o=>o.fee>0);
+  if(f.dl==='month'){const n=new Date();list=list.filter(o=>{if(!o.dl)return false;const d=new Date(o.dl);const days=Math.round((d-n)/864e5);return days>=0&&days<=30;});}
+  if(f.dl==='q'){const n=new Date();list=list.filter(o=>{if(!o.dl)return false;const d=new Date(o.dl);const days=Math.round((d-n)/864e5);return days>=0&&days<=90;});}
+  if(f.dl==='roll') list=list.filter(o=>o.dlType==='rolling');
+  if(S.sort==='deadline') list.sort((a,b)=>{const da=a.dl?new Date(a.dl).getTime():9e15;const db=b.dl?new Date(b.dl).getTime():9e15;return da-db;});
+  else if(S.sort==='name') list.sort((a,b)=>a.title.localeCompare(b.title));
+  else if(S.sort==='fee') list.sort((a,b)=>a.fee-b.fee);
+  return list;
+}
+
+function locChip(l){return{EU:'EU',US:'US',International:'Intl',Germany:'DE','SE Europe':'SE EU'}[l]||l;}
+
+function toast(msg,dur=2200){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+function exportText(o){
+  const d=dlInfo(o);
+  return [`▸ ${o.title} — ${cat(o.cat).label.toUpperCase()}`,
+    `  Organisation: ${o.org}`,`  Deadline: ${o.dl||o.dlLabel||'TBC'} ${d.open?'(open)':'(closed)'}`,
+    `  Grant/Award:  ${o.grant||'N/A'}`,`  Fee:     ${o.fee===0?'No fee':'€'+o.fee}`,
+    `  Location:     ${o.locs.join(', ')}`,`  Eligibility:  ${o.elig}`,
+    `  Website: https://${o.web}`,``].join('\n');
+}
+
+// PDF via same-window print modal (avoids popup blocker)
+function doPrint(){
+  // Try window.print(); if blocked, download as HTML file
+  try{
+    window.print();
+  }catch(e){
+    downloadPrintHTML();
+  }
+}
+
+function downloadPrintHTML(){
+  const content=document.getElementById('printModal').outerHTML;
+  const full=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;background:#f8f7ff;color:#1c1828;padding:32px;max-width:760px;margin:0 auto}.pm-actions{display:none}</style></head><body>${content}<script>window.onload=function(){window.print()}<\/script></body></html>`;
+  const blob=new Blob([full],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='pellicule-export.html';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+}
+
+function exportPDF(ids){
+  const opps=DB.filter(o=>ids.has(o.id));
+  if(!opps.length){toast('No opportunities selected');return;}
+  const now=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const pm=document.getElementById('printModal');
+  pm.innerHTML=`
+    <div class="pm-actions no-print">
+      <button class="pm-close" onclick="closePrint()">✕ Close</button>
+      <button class="pm-save" onclick="doPrint()">Save as PDF</button>
+    </div>
+    <div class="pm-logo">
+      <svg viewBox="0 0 180 44" width="180" height="44" xmlns="http://www.w3.org/2000/svg" style="-webkit-print-color-adjust:exact;print-color-adjust:exact">
+        <rect x="0.75" y="0.75" width="178.5" height="42.5" rx="4" fill="none" stroke="#1c1828" stroke-width="0.75" opacity="0.25"/>
+        <line x1="0.75" y1="12" x2="0.75" y2="0.75" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="0.75" y1="0.75" x2="12" y2="0.75" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="179.25" y1="12" x2="179.25" y2="0.75" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="179.25" y1="0.75" x2="167" y2="0.75" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="0.75" y1="32" x2="0.75" y2="43.25" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="0.75" y1="43.25" x2="12" y2="43.25" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="179.25" y1="32" x2="179.25" y2="43.25" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="179.25" y1="43.25" x2="167" y2="43.25" stroke="#7c6af7" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="90" y="28" text-anchor="middle" font-family="DM Mono,ui-monospace,monospace" font-size="14" letter-spacing="5" fill="#1c1828">PELLICULE</text>
+      </svg>
+    </div>
+    <div class="pm-head">
+      <h1>Film Opportunities</h1>
+      <div class="meta">${opps.length} opportunit${opps.length===1?'y':'ies'} · ${now} · Always verify deadlines at official sources before submitting</div>
+    </div>
+    ${opps.map(o=>{
+      const c=cat(o.cat);const d=dlInfo(o);
+      return`<div class="pm-opp">
+        <div class="pm-opp-head" style="border-left:4px solid ${c.color}">
+          <div class="pm-opp-title">${o.title}</div>
+          <div class="pm-opp-org">${o.org}</div>
+        </div>
+        <div class="pm-grid">
+          <div class="pm-kv"><div class="pm-kv-l">Category</div><div class="pm-kv-v">${c.label}</div></div>
+          <div class="pm-kv"><div class="pm-kv-l">Deadline</div><div class="pm-kv-v" style="color:#c97c10">${o.dl||o.dlLabel||'TBC'}</div></div>
+          <div class="pm-kv"><div class="pm-kv-l">Grant / Award</div><div class="pm-kv-v" style="color:#1a7a5a">${o.grant||'N/A'}</div></div>
+          <div class="pm-kv"><div class="pm-kv-l">Fee</div><div class="pm-kv-v">${o.fee===0?'No fee':'€'+o.fee}</div></div>
+          <div class="pm-kv"><div class="pm-kv-l">Location</div><div class="pm-kv-v">${o.locs.join(', ')}</div></div>
+          <div class="pm-kv"><div class="pm-kv-l">Types</div><div class="pm-kv-v">${o.types.join(', ')}</div></div>
+        </div>
+        <div class="pm-sect"><div class="pm-sect-l">Eligibility</div><div class="pm-sect-v">${o.elig}</div></div>
+        <div class="pm-sect"><div class="pm-sect-l">What's needed</div><div class="pm-sect-v">${o.req}</div></div>
+        <div class="pm-sect"><div class="pm-sect-l">Website</div><div class="pm-sect-v"><a href="https://${o.web}">${o.web}</a></div></div>
+        ${o.contact?`<div class="pm-sect"><div class="pm-sect-l">Contact</div><div class="pm-sect-v">${o.contact}</div></div>`:''}
+      </div>`;
+    }).join('')}
+    <div class="pm-footer">pellicule.film · Deadlines verified periodically — always confirm at the official source before submitting</div>
+  `;
+  pm.style.display='block';
+  document.getElementById('app').style.display='none';
+}
+
+function closePrint(){
+  document.getElementById('printModal').style.display='none';
+  document.getElementById('app').style.display='';
+}
+
+function copyText(text){
+  if(navigator.clipboard&&window.isSecureContext){
+    return navigator.clipboard.writeText(text);
+  }
+  // Fallback for file:// or non-HTTPS contexts
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){document.body.removeChild(ta);return Promise.reject(e);}
+  document.body.removeChild(ta);return Promise.resolve();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render(){
+  const focId=document.activeElement?.id;
+  const focSel=document.activeElement?.selectionStart??null;
+  document.getElementById('app').innerHTML=html();
+  attachEvents();
+  if(focId){const el=document.getElementById(focId);if(el){el.focus();if(focSel!==null)try{el.setSelectionRange(focSel,focSel);}catch(e){}}}
+  // Restore sidebar open state (avoids re-animation on every render)
+  if(S.sbOpen){
+    document.querySelector('.sb')?.classList.add('is-open');
+    document.querySelector('.sb-scrim')?.classList.add('is-open');
+  }
+}
+
+function html(){
+  const opps=filtered();
+  return`${hdr()}
+  <div class="sb-scrim" data-a="closeSb"></div>
+  <div class="shell ${S.selId?'dp-open':''}">
+    ${sidebar()}
+    ${S.view==='list'?listView(opps):calView()}
+    ${S.selId?detailPanel():''}
+  </div>
+  ${S.selMode&&S.selected.size>0?expBar():''}
+  ${S.modal?modalHtml():''}`;
+}
+
+// ── HEADER ────────────────────────────────────────────────────────────────────
+function hdr(){
+  return`<header>
+    <button class="hmenu ib" data-a="toggleSb" aria-label="Filters">${I.menu()}</button>
+    <div class="logo logo-svg">
+      <svg viewBox="0 0 126 30" width="126" height="30" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.75" y="0.75" width="124.5" height="28.5" rx="3" fill="none" style="stroke:var(--t1)" stroke-width="0.75" opacity="0.28"/>
+        <line x1="0.75" y1="8" x2="0.75" y2="0.75" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="0.75" y1="0.75" x2="8" y2="0.75" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="125.25" y1="8" x2="125.25" y2="0.75" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="125.25" y1="0.75" x2="118" y2="0.75" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="0.75" y1="22" x2="0.75" y2="29.25" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="0.75" y1="29.25" x2="8" y2="29.25" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="125.25" y1="22" x2="125.25" y2="29.25" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="125.25" y1="29.25" x2="118" y2="29.25" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <text x="63" y="19.5" text-anchor="middle" font-family="DM Mono,ui-monospace,monospace" font-size="10.5" letter-spacing="3.5" style="fill:var(--t1)">PELLICULE</text>
+      </svg>
+    </div>
+    <div class="hdiv"></div>
+    <div class="vtog">
+      <button class="vbtn ${S.view==='list'?'on':''}" data-a="view" data-v="list">${I.list()} <span class="vbtn-txt">List</span></button>
+      <button class="vbtn ${S.view==='cal'?'on':''}" data-a="view" data-v="cal">${I.cal()} <span class="vbtn-txt">Calendar</span></button>
+    </div>
+    <button class="ib mob-vtog" data-a="toggleView" title="Switch view" style="display:none">${S.view==='list'?I.cal():I.list()}</button>
+    <div class="hsr">${I.srch()}<input id="searchInput" type="text" placeholder="Search…" value="${S.f.search}" autocomplete="off"></div>
+    <div class="hrt">
+      ${S.selMode&&S.selected.size>0?`<span class="sel-badge">${S.selected.size}</span>`:''}
+      <button class="ib ${S.f.active?'on':''}" data-a="toggleActive" title="Open calls only">${I.bolt()}</button>
+      <button class="ib ${S.selMode?'on':''}" data-a="toggleSel" title="Select for PDF">${I.tick()}</button>
+      <button class="ib" data-a="toggleTheme" title="Light / dark">${I.sun()}</button>
+    </div>
+  </header>`;
+}
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────────
+function sidebar(){
+  const openCnt=DB.filter(o=>dlInfo(o).open).length;
+  const upCnt=DB.filter(o=>{const d=dlInfo(o);return d.days!==null&&d.days>=0&&d.days<=30;}).length;
+  return`<aside class="sb">
+    <div class="sb-s">
+      <div class="sb-l">Browse</div>
+      <button class="ni ${S.nav==='all'?'on':''}" data-a="nav" data-n="all">${I.grid()} All Opportunities <span class="cnt">${DB.length}</span></button>
+      <button class="ni ${S.nav==='open'?'on':''}" data-a="nav" data-n="open">${I.bolt()} Open Now <span class="cnt">${openCnt}</span></button>
+      <button class="ni ${S.nav==='upcoming'?'on':''}" data-a="nav" data-n="upcoming">${I.clock()} Next 30 days <span class="cnt">${upCnt}</span></button>
+    </div>
+    <div class="sbdiv"></div>
+    <div class="fg">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+        <span class="fl" style="margin-bottom:0">Category</span>
+        ${(S.f.cat.size>0||S.f.loc!=='all'||S.f.fee!=='all'||S.f.dl!=='all')?`<button style="background:none;border:none;color:var(--accent);font-size:11px;font-family:var(--font);cursor:pointer;padding:0;font-weight:500" data-a="resetFilters">Reset all</button>`:''}
+      </div>
+      <div class="chips">
+        <button class="chip ${S.f.cat.size===0?'on':''}" data-a="resetCat">All</button>
+        ${Object.entries(CATS).map(([k,v])=>`<button class="chip ${S.f.cat.has(k)?'on':''}" data-a="fcat" data-k="${k}">${v.label}</button>`).join('')}
+      </div>
+    </div>
+    <div class="fg"><span class="fl">Location</span><div class="chips">
+      <button class="chip ${S.f.loc==='all'?'on':''}" data-a="fc" data-k="loc" data-v="all">All</button>
+      ${allLocs().map(l=>`<button class="chip ${S.f.loc===l?'on':''}" data-a="fc" data-k="loc" data-v="${l}">${locChip(l)}</button>`).join('')}
+    </div></div>
+    <div class="fg"><span class="fl">Fee</span><div class="chips">
+      <button class="chip ${S.f.fee==='all'?'on':''}" data-a="fc" data-k="fee" data-v="all">All</button>
+      <button class="chip ${S.f.fee==='free'?'on':''}" data-a="fc" data-k="fee" data-v="free">Free</button>
+      <button class="chip ${S.f.fee==='paid'?'on':''}" data-a="fc" data-k="fee" data-v="paid">Paid</button>
+    </div></div>
+    <div class="fg"><span class="fl">Deadline</span><div class="chips">
+      <button class="chip ${S.f.dl==='all'?'on':''}" data-a="fc" data-k="dl" data-v="all">All</button>
+      <button class="chip ${S.f.dl==='month'?'on':''}" data-a="fc" data-k="dl" data-v="month">This month</button>
+      <button class="chip ${S.f.dl==='q'?'on':''}" data-a="fc" data-k="dl" data-v="q">Next 3 mo.</button>
+      <button class="chip ${S.f.dl==='roll'?'on':''}" data-a="fc" data-k="dl" data-v="roll">Rolling</button>
+    </div></div>
+    <div class="sb-actions">
+      <button class="sb-action-btn ${S.selMode?'on':''}" data-a="toggleSel">${I.tick()} Select</button>
+      <button class="sb-action-btn" data-a="toggleTheme">${I.sun()} Theme</button>
+    </div>
+    <div class="sb-foot">
+      <button class="sb-footbtn" data-a="openModal" data-m="info">${I.info()} About</button>
+      <button class="sb-footbtn" data-a="openModal" data-m="suggest">${I.plus()} Suggest</button>
+    </div>
+  </aside>`;
+}
+
+// ── LIST VIEW ─────────────────────────────────────────────────────────────────
+function listView(opps){
+  return`<div class="content"><div class="ci">
+    <div class="lhdr">
+      <div class="lt">Showing <strong>${opps.length}</strong> of ${DB.length}${S.f.active||S.nav==='open'?' · open only':''}</div>
+      <div class="lctrl">
+        <select class="srt" id="sortSel">
+          <option value="deadline" ${S.sort==='deadline'?'selected':''}>Soonest deadline</option>
+          <option value="name" ${S.sort==='name'?'selected':''}>Name A–Z</option>
+          <option value="fee" ${S.sort==='fee'?'selected':''}>Free first</option>
+        </select>
+      </div>
+    </div>
+    <div class="cards">${opps.length?opps.map((o,i)=>card(o,i)).join(''):emptyState()}</div>
+  </div></div>`;
+}
+
+function card(o,i){
+  const d=dlInfo(o);const c=cat(o.cat);const isSel=S.selected.has(o.id);const isDp=S.selId===o.id;
+  return`<div class="card${isSel?' sel':''}${isDp?' dsel':''}" style="animation-delay:${i*18}ms;border-left-color:${c.color}" data-a="pick" data-id="${o.id}">
+    ${S.selMode?`<div class="cchk"><div class="chkb ${isSel?'on':''}" data-a="chk" data-id="${o.id}">${I.tick()}</div></div>`:''}
+    <div class="cm">
+      <div class="ctop"><div class="ctitle">${o.title}</div><span class="dc ${d.cls}">${d.label}</span></div>
+      <div class="corg">${o.org}</div>
+      <div class="ctags">
+        ${o.types.map(t=>`<span class="tag ttype">${t}</span>`).join('')}
+        ${o.locs.map(l=>`<span class="tag tloc">${locChip(l)}</span>`).join('')}
+        <span class="tag" style="color:${c.color};border-color:${c.color}25;background:${c.color}10">${c.label}</span>
+      </div>
+      <div class="cmeta">
+        ${o.fee===0?`<span class="mi">${I.check()} <span style="color:#34d399">No fee</span></span>`:`<span class="mi">${I.fee()} €${o.fee}</span>`}
+        ${o.grant&&o.grant!=='N/A'?`<span class="mi gamt">${I.grant()} ${o.grant}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function emptyState(){
+  return`<div class="empty">${I.film()}<p>No opportunities match your filters</p><span>Try adjusting the sidebar</span></div>`;
+}
+
+// ── CALENDAR VIEW ─────────────────────────────────────────────────────────────
+function calView(){
+  if(window.innerWidth<=640) return calViewMobile();
+  const DN=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const isMobile=window.innerWidth<=640;
+  const zoom=isMobile?1:S.calZ;
+  const months=[];
+  for(let i=0;i<zoom;i++){
+    const m=(S.calM+i)%12;
+    const y=S.calY+Math.floor((S.calM+i)/12);
+    months.push({m,y});
+  }
+  return`<div class="content"><div class="ci">
+    <div class="calnav">
+      <button class="cnb" data-a="cprev">${I.chevL()}</button>
+      <div class="cnt2">${MN[months[0].m]} ${months[0].y} — ${MN[months[months.length-1].m]} ${months[months.length-1].y}</div>
+      <button class="cnb" data-a="cnext">${I.chevR()}</button>
+      <button class="cnb" data-a="ctoday" style="width:auto;padding:0 9px;font-size:11.5px;font-family:var(--font)">Today</button>
+      <div class="czm">${[3,6,12].map(z=>`<button class="czb ${S.calZ===z?'on':''}" data-a="czoom" data-z="${z}">${z===12?'Year':z+'mo'}</button>`).join('')}</div>
+    </div>
+    <div class="mgrid">${months.map(({m,y})=>monthBlock(m,y,DN)).join('')}</div>
+  </div></div>`;
+}
+
+const SHORT_TITLES={'Sundance Institute':'Sundance','Creative Europe MEDIA':'CE MEDIA','Nipkow Program':'Nipkow','Berlinale Co-Production Market':'Berlinale','Rotterdam Lab (IFFR)':'Rotterdam Lab','Sarajevo Film Festival':'Sarajevo FF','XPOSED Film Fund':'XPOSED','Onassis Foundation':'Onassis','European Short Pitch':'EU Short Pitch','Medienboard Berlin-Brandenburg':'Medienboard','Clermont-Ferrand Short Film Market':'Clermont-Ferrand','Oxbelly Screenwriters Program':'Oxbelly','IDM Film Fund Südtirol':'IDM Südtirol','Netherlands Film Fund':'NL Film Fund','Danish Film Institute':'DFI','CNC France':'CNC','Screen Ireland':'Screen Ireland','Polish Film Institute':'PISF','Finnish Film Foundation':'Finnish FF','Austrian Film Institute':'Austrian FI','Screen Brussels Fund':'Screen.Brussels','Norwegian Film Institute':'NFI','Interfilm Script Pitch':'Interfilm','Drama Pitching Lab':'Drama Lab','Sarajevo Talents':'Sarajevo T.','Festival of Animation Berlin':'FA|Berlin','Locarno Residency':'Locarno','QueerScope Debut Film Award':'QueerScope','QueerScope Film Fund':'QueerScope F.','MASO Script Lab':'MASO','TorinoFilmLab FeatureLab':'TorinoFL','TorinoFilmLab ScriptLab':'TorinoFL Script','Cannes La Résidence':'Cannes Res.','IDFA Forum':'IDFA','Hot Docs Forum':'Hot Docs','Thessaloniki International Film Festival — Crossroads':'TIFF Crossroads','Goteborg Film Festival — Nordic Film Market':'Göteborg','Clermont-Ferrand Euro Connection':'Clermont EC','Eurimages Co-Production Fund':'Eurimages','Berlinale World Cinema Fund':'WCF','MIDPOINT Shorts':'MIDPOINT','Shore Scripts Short Film Fund':'Shore Scripts','Goethe-Institut Cyprus':'Goethe Cyprus','Film i Väst':'Film i Väst'};
+function shortTitle(t){return SHORT_TITLES[t]||(t.length>16?t.split(' ').slice(0,2).join(' '):t);}
+
+function monthBlock(m,y,DN){
+  const today=new Date();today.setHours(0,0,0,0);
+  const first=new Date(y,m,1),last=new Date(y,m+1,0);
+  const startDow=(first.getDay()+6)%7;
+  const exactByDay={};
+  DB.forEach(o=>{
+    if(!o.dl)return;
+    const dd=new Date(o.dl);
+    if(dd.getFullYear()===y&&dd.getMonth()===m){
+      const d=dd.getDate();
+      if(!exactByDay[d])exactByDay[d]=[];
+      exactByDay[d].push({opp:o,approx:false});
+    }
+  });
+  DB.forEach(o=>{
+    approxDates(o).forEach(({date})=>{
+      if(date.getFullYear()===y&&date.getMonth()===m){
+        const d=date.getDate();
+        if(!exactByDay[d])exactByDay[d]=[];
+        if(!exactByDay[d].find(e=>e.opp.id===o.id))
+          exactByDay[d].push({opp:o,approx:true});
+      }
+    });
+  });
+  const totalDeadlines=Object.values(exactByDay).flat().length;
+  const cells=[];
+  for(let i=0;i<startDow;i++)cells.push(null);
+  for(let d=1;d<=last.getDate();d++){
+    const date=new Date(y,m,d);
+    cells.push({d,isToday:date.getTime()===today.getTime(),isPast:date<today,entries:exactByDay[d]||[]});
+  }
+  return`<div class="mb">
+    <div class="mhdr"><div class="mn">${MN[m]} ${y}</div><div class="mc">${totalDeadlines} deadline${totalDeadlines!==1?'s':''}</div></div>
+    <div class="dgrid">
+      ${DN.map(d=>`<div class="dhdr">${d}</div>`).join('')}
+      ${cells.map(c=>!c?`<div class="dcell other"></div>`:`<div class="dcell ${c.isToday?'today':''} ${c.isPast?'past':''}">
+        <div class="dn">${c.d}</div>
+        <div class="ditems">
+          ${c.entries.slice(0,2).map(({opp:o,approx})=>{const col=cat(o.cat).color;return`<div class="ci-i ${approx?'approx':''}" style="background:${col}18;color:${col};border-left-color:${col}" data-a="pick" data-id="${o.id}" title="${o.title}">${approx?'~':''}${shortTitle(o.title)}</div>`;}).join('')}
+          ${c.entries.length>2?`<div class="ci-more">+${c.entries.length-2}</div>`:''}
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function calViewMobile(){
+  const MN3=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const today=new Date();today.setHours(0,0,0,0);
+  const nowM=today.getMonth(),nowY=today.getFullYear();
+  // 13 months from today as pills
+  const pills=[];
+  for(let i=0;i<13;i++){
+    const m=(nowM+i)%12, y=nowY+Math.floor((nowM+i)/12);
+    const exact=DB.filter(o=>{if(!o.dl)return false;const d=new Date(o.dl);return d.getFullYear()===y&&d.getMonth()===m;}).length;
+    const approx=DB.filter(o=>{if(o.dl)return false;return approxDates(o).some(({date})=>date.getFullYear()===y&&date.getMonth()===m);}).length;
+    const hasDl=exact+approx>0;
+    const isNext=y!==nowY;
+    pills.push({m,y,hasDl,label:MN3[m]+(isNext?`'${String(y).slice(2)}`:'' )});
+  }
+  const selM=S.calM,selY=S.calY;
+  // Validate: if selected is before today's month, clamp to now
+  const selDate=new Date(selY,selM,1);
+  const nowDate=new Date(nowY,nowM,1);
+  // Get exact deadlines this month
+  const exactOpps=DB.filter(o=>{
+    if(!o.dl)return false;
+    const d=new Date(o.dl);
+    return d.getFullYear()===selY&&d.getMonth()===selM;
+  }).sort((a,b)=>new Date(a.dl)-new Date(b.dl));
+  // Get approx deadlines this month
+  const approxOpps=DB.filter(o=>{
+    if(o.dl)return false;
+    return approxDates(o).some(({date})=>date.getFullYear()===selY&&date.getMonth()===selM);
+  });
+  // Rolling
+  const rollingOpps=DB.filter(o=>o.dlType==='rolling'&&dlInfo(o).open);
+  const hasContent=exactOpps.length||approxOpps.length;
+  return`<div class="content"><div class="ci">
+    <div class="cal-strip" id="calStrip">
+      ${pills.map(p=>{
+        const isSel=p.m===selM&&p.y===selY;
+        return`<button class="cs-pill ${isSel?'on':''}" data-a="calGoto" data-m="${p.m}" data-y="${p.y}">
+          <span class="cs-lbl">${p.label}</span>
+          <span class="cs-dot ${p.hasDl?'has-dl':''}"></span>
+        </button>`;
+      }).join('')}
+    </div>
+    <div class="cal-agenda">
+      <div class="agenda-head">
+        <button class="cnb" data-a="calAgoPrev">${I.chevL()}</button>
+        <span class="agenda-head-title">${MN3[selM]} ${selY}</span>
+        <button class="cnb" data-a="calAgoNext">${I.chevR()}</button>
+      </div>
+      ${exactOpps.length?`<div class="agenda-slbl">Confirmed deadlines</div>${exactOpps.map(o=>agendaItem(o)).join('')}`:''}
+      ${approxOpps.length?`<div class="agenda-slbl">Approximate ${`(~${MN3[selM]})`}</div>${approxOpps.map(o=>agendaItem(o)).join('')}`:''}
+      ${!hasContent?`<div class="agenda-empty">No deadlines in ${MN3[selM]} ${selY}<br><span style="color:var(--t3);font-size:12px">Try a different month above</span></div>`:''}
+      ${rollingOpps.length?`<div class="agenda-slbl" style="margin-top:16px">Rolling / open year-round</div>${rollingOpps.map(o=>agendaItem(o)).join('')}`:''}
+    </div>
+  </div></div>`;
+}
+
+function agendaItem(o){
+  const d=dlInfo(o),c=cat(o.cat);
+  const isSel=S.selected.has(o.id);
+  const dateLabel=o.dl?new Date(o.dl).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):o.dlLabel||'Rolling';
+  return`<div class="agenda-item ${isSel?'sel':''}" data-a="${S.selMode?'chk':'pick'}" data-id="${o.id}">
+    ${S.selMode?`<div class="cchk"><div class="chkb ${isSel?'on':''}">${I.tick()}</div></div>`:''}
+    <div class="agenda-cat" style="background:${c.color}"></div>
+    <div class="agenda-info">
+      <div class="agenda-name">${o.title}</div>
+      <div class="agenda-sub">${c.label}${o.fee===0?' · Free':o.fee?` · €${o.fee}`:''}</div>
+    </div>
+    <span class="dc ${d.cls}" style="flex-shrink:0;font-size:11px">${dateLabel}</span>
+  </div>`;
+}
+
+function detailPanel(){
+  const o=DB.find(x=>x.id===S.selId);if(!o)return'';
+  const d=dlInfo(o),c=cat(o.cat);const isSel=S.selected.has(o.id);
+  return`<aside class="dp">
+    <div class="dp-handle"></div>
+    <div class="dph">
+      <div class="dpbar" style="background:${c.color}"></div>
+      <div class="dp-titlerow">
+        <div style="flex:1;min-width:0">
+          <div class="dptit">${o.title}</div>
+          <div class="dporg">${o.org}</div>
+        </div>
+        <button class="dpcl" data-a="closedp">${I.x()}</button>
+      </div>
+      <div class="dptags">
+        <span class="dc ${d.cls}">${d.label}</span>
+        <span class="tag" style="color:${c.color};border-color:${c.color}30;background:${c.color}12">${c.label}</span>
+        ${o.fee===0?`<span class="tag" style="color:#34d399;border-color:rgba(52,211,153,.2);background:rgba(52,211,153,.08)">No fee</span>`:`<span class="tag ttype">€${o.fee}</span>`}
+      </div>
+    </div>
+    <div class="dpbody">
+      <div class="dps"><div class="dps-l">About</div><div class="dps-v">${o.desc}</div></div>
+      <div class="dprow">
+        <div class="dpkv"><div class="dpkv-l">Grant / Award</div><div class="dpkv-v green">${o.grant||'N/A'}</div></div>
+        <div class="dpkv"><div class="dpkv-l">Deadline</div><div class="dpkv-v amber">${o.dl||o.dlLabel||'TBC'}</div></div>
+      </div>
+      <div class="dprow">
+        <div class="dpkv"><div class="dpkv-l">Location</div><div class="dpkv-v">${o.locs.join(', ')}</div></div>
+        <div class="dpkv"><div class="dpkv-l">Types</div><div class="dpkv-v">${o.types.join(', ')}</div></div>
+      </div>
+      <div class="dps"><div class="dps-l">Eligibility</div><div class="dps-v">${o.elig}</div></div>
+      <div class="dps"><div class="dps-l">What's needed</div><div class="dps-v">${o.req}</div></div>
+      ${o.contact?`<div class="dps"><div class="dps-l">Contact</div><div class="dps-v">${o.contact}</div></div>`:''}
+      <div class="dps"><div class="dps-l">Source</div><div class="dps-v"><a href="https://${o.web}" target="_blank">${o.web} ↗</a></div></div>
+    </div>
+    <div class="dpft">
+      <a class="dpb dpb-site" href="https://${o.web}" target="_blank" rel="noopener">${I.ext()} Website</a>
+      <button class="dpb dpb-sel ${isSel?'on':''}" data-a="chk" data-id="${o.id}">${I.tick()} ${isSel?'Selected':'Select'}</button>
+    </div>
+  </aside>`;
+}
+
+// ── EXPORT BAR ────────────────────────────────────────────────────────────────
+function expBar(){
+  return`<div class="expbar">
+    <div class="expbar-t"><span>${S.selected.size}</span> selected</div>
+    <button class="expbar-b" data-a="exportPDF" title="Export selected as PDF">${I.doc()}</button>
+    <button class="expbar-x" data-a="clearSel">${I.x()}</button>
+  </div>`;
+}
+
+// ── MODALS ────────────────────────────────────────────────────────────────────
+function modalHtml(){
+  return S.modal==='info'?infoModal():suggestModal();
+}
+
+function infoModal(){
+  return`<div class="overlay" id="modalOverlay">
+    <div class="modal" style="max-width:500px">
+      <button class="modal-close" data-a="closeModal">${I.x()}</button>
+      <div class="info-logo">
+        <svg viewBox="0 0 160 40" width="160" height="40" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.75" y="0.75" width="158.5" height="38.5" rx="4" fill="none" style="stroke:var(--t1)" stroke-width="0.75" opacity="0.28"/>
+          <line x1="0.75" y1="11" x2="0.75" y2="0.75" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="0.75" y1="0.75" x2="11" y2="0.75" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="159.25" y1="11" x2="159.25" y2="0.75" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="159.25" y1="0.75" x2="149" y2="0.75" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="0.75" y1="29" x2="0.75" y2="39.25" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="0.75" y1="39.25" x2="11" y2="39.25" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="159.25" y1="29" x2="159.25" y2="39.25" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="159.25" y1="39.25" x2="149" y2="39.25" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="80" y="25.5" text-anchor="middle" font-family="DM Mono,ui-monospace,monospace" font-size="13" letter-spacing="4.5" style="fill:var(--t1)">PELLICULE</text>
+        </svg>
+      </div>
+      <div class="info-section">
+        <p>Keeping track of film opportunities was always a headache. Grants, labs, residencies and open calls are scattered across dozens of websites and mailing lists, and by the time you find something the deadline has already passed. I wanted one clear place to see everything at a glance, and decided to share it so other filmmakers don't have to deal with the same.</p>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-section">
+        <h4>How it works</h4>
+        <p>The database is curated and maintained manually, with periodic verification against official sources. Deadlines are checked regularly and updated when calls open or close. Entries marked with ~ on the calendar are approximate, based on typical annual patterns rather than a confirmed date.</p>
+        <div class="verified-note">${I.check()} Always verify deadlines directly on the official website before submitting. Pellicule is a navigator, not a guarantee.</div>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-section">
+        <h4>Something missing?</h4>
+        <p>If you know of an opportunity that should be here, use the <strong>Suggest</strong> button in the sidebar. I review all submissions and add verified entries to the database.</p>
+      </div>
+      <div class="support-box">
+        ${I.heart()}
+        <p>PELLICULE is free and ad-free, maintained by one filmmaker in their spare time.<br>If it's useful to you, <a href="https://pellicule.gumroad.com" target="_blank" rel="noopener">a small contribution via Gumroad</a> helps keep it running and updated.</p>
+      </div>
+      <div style="margin-top:12px;text-align:center">
+        <button class="contrib-btn" data-a="contributor">Become a contributor</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function suggestModal(){
+  return`<div class="overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" data-a="closeModal">${I.x()}</button>
+      <h3>Suggest an opportunity</h3>
+      <p>Know something that should be here? Add it below — required fields marked with ✦. I'll verify it and add it to the database if it checks out.</p>
+      <div class="mrow">
+        <div class="mfg" style="flex:2">
+          <label class="mfl">Organisation / Programme name <span class="req">✦</span></label>
+          <input class="minp" id="sg-name" type="text" placeholder="e.g. Sundance Institute">
+        </div>
+        <div class="mfg">
+          <label class="mfl">Category <span class="req">✦</span></label>
+          <select class="msel" id="sg-cat">
+            <option value="">Select…</option>
+            ${Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="mfg">
+        <label class="mfl">Official website URL <span class="req">✦</span></label>
+        <input class="minp" id="sg-web" type="url" placeholder="https://…">
+      </div>
+      <div class="mrow">
+        <div class="mfg">
+          <label class="mfl">Deadline (if known)</label>
+          <input class="minp" id="sg-dl" type="text" placeholder="e.g. 30 June 2026">
+        </div>
+        <div class="mfg">
+          <label class="mfl">Grant / Award amount</label>
+          <input class="minp" id="sg-grant" type="text" placeholder="e.g. €5,000">
+        </div>
+      </div>
+      <div class="mrow">
+        <div class="mfg">
+          <label class="mfl">Film types</label>
+          <input class="minp" id="sg-types" type="text" placeholder="Feature, Short, Documentary…">
+        </div>
+        <div class="mfg">
+          <label class="mfl">Location / Eligibility</label>
+          <input class="minp" id="sg-loc" type="text" placeholder="EU, International…">
+        </div>
+      </div>
+      <div class="mfg">
+        <label class="mfl">Any other notes</label>
+        <input class="minp" id="sg-notes" type="text" placeholder="Anything useful to know…">
+      </div>
+      <div class="macts">
+        <button class="btn-cancel" data-a="closeModal">Cancel</button>
+        <button class="btn-submit" data-a="submitSuggest">Send suggestion</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── ICONS ─────────────────────────────────────────────────────────────────────
+const I={
+  menu:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="5" x2="14" y2="5"/><line x1="2" y1="8.5" x2="14" y2="8.5"/><line x1="2" y1="12" x2="14" y2="12"/></svg>`,
+  list:()=>`<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M4.5,17.5C5.328,17.5 6,18.172 6,19C6,19.828 5.328,20.5 4.5,20.5C3.672,20.5 3,19.828 3,19C3,18.172 3.672,17.5 4.5,17.5ZM20,18C20.552,18 21,18.448 21,19C21,19.552 20.552,20 20,20L9,20C8.448,20 8,19.552 8,19C8,18.448 8.448,18 9,18L20,18ZM4.5,10.5C5.328,10.5 6,11.172 6,12C6,12.828 5.328,13.5 4.5,13.5C3.672,13.5 3,12.828 3,12C3,11.172 3.672,10.5 4.5,10.5ZM20,11C20.552,11 21,11.448 21,12C21,12.552 20.552,13 20,13L9,13C8.448,13 8,12.552 8,12C8,11.448 8.448,11 9,11L20,11ZM4.5,3.5C5.328,3.5 6,4.172 6,5C6,5.828 5.328,6.5 4.5,6.5C3.672,6.5 3,5.828 3,5C3,4.172 3.672,3.5 4.5,3.5ZM20,4C20.552,4 21,4.448 21,5C21,5.552 20.552,6 20,6L9,6C8.448,6 8,5.552 8,5C8,4.448 8.448,4 9,4L20,4Z"/></svg>`,
+  cal:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><line x1="2" y1="6" x2="14" y2="6"/><line x1="6" y1="2" x2="6" y2="6"/><line x1="10" y1="2" x2="10" y2="6"/></svg>`,
+  srch:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--t3);pointer-events:none"><circle cx="7" cy="7" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>`,
+  grid:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>`,
+  bolt:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9,2 5,9 8.5,9 7,14 11,7 7.5,7"/></svg>`,
+  clock:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><polyline points="8,5 8,8 10.5,10"/></svg>`,
+  tick:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,8 6.5,11.5 13,5"/></svg>`,
+  sun:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><line x1="8" y1="1.5" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="14.5"/><line x1="1.5" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="14.5" y2="8"/><line x1="3.3" y1="3.3" x2="4.4" y2="4.4"/><line x1="11.6" y1="11.6" x2="12.7" y2="12.7"/><line x1="12.7" y1="3.3" x2="11.6" y2="4.4"/><line x1="4.4" y1="11.6" x2="3.3" y2="12.7"/></svg>`,
+  x:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="4" x2="12" y2="12"/><line x1="12" y1="4" x2="4" y2="12"/></svg>`,
+  check:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3,8 6.5,11.5 13,5"/></svg>`,
+  fee:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="11"/></svg>`,
+  grant:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="12" height="7" rx="1"/><path d="M5 7V5a3 3 0 016 0v2"/></svg>`,
+  ext:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3h3v3"/><line x1="13" y1="3" x2="7" y2="9"/><path d="M7 4H4a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1v-3"/></svg>`,
+  copy:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="8" height="9" rx="1"/><path d="M4 11H3a1 1 0 01-1-1V3a1 1 0 011-1h7a1 1 0 011 1v1"/></svg>`,
+  pdf:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1" width="10" height="14" rx="1"/><line x1="6" y1="5" x2="10" y2="5"/><line x1="6" y1="8" x2="10" y2="8"/><line x1="6" y1="11" x2="8" y2="11"/></svg>`,
+  chevL:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="10,4 6,8 10,12"/></svg>`,
+  chevR:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6,4 10,8 6,12"/></svg>`,
+  film:()=>`<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="8" width="32" height="24" rx="2"/><line x1="4" y1="16" x2="36" y2="16"/><line x1="4" y1="24" x2="36" y2="24"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="10" y1="24" x2="10" y2="32"/><line x1="20" y1="8" x2="20" y2="16"/><line x1="20" y1="24" x2="20" y2="32"/><line x1="30" y1="8" x2="30" y2="16"/><line x1="30" y1="24" x2="30" y2="32"/></svg>`,
+  info:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r=".5" fill="currentColor"/></svg>`,
+  plus:()=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>`,
+  doc:()=>`<svg viewBox="0 0 56 56" fill="currentColor" style="width:15px;height:15px"><path d="M15.555 53.125h24.89c4.852 0 7.266-2.438 7.266-7.336V10.234c0-4.875-2.414-7.36-7.266-7.36H15.555c-4.828 0-7.266 2.485-7.266 7.36v35.555c0 4.898 2.438 7.336 7.266 7.336zm.187-3.773c-2.414 0-3.68-1.29-3.68-3.633V10.305c0-2.32 1.266-3.656 3.703-3.656h24.492c2.438 0 3.68 1.336 3.68 3.656v35.414c0 2.344-1.242 3.633-3.656 3.633zm3.398-33.906h18.766c.82 0 1.453-.657 1.453-1.477 0-.797-.633-1.406-1.453-1.406H19.14c-.867 0-1.477.61-1.477 1.406 0 .82.61 1.477 1.477 1.477zm0 8.18h18.766c.82 0 1.453-.657 1.453-1.477 0-.797-.633-1.406-1.453-1.406H19.14c-.867 0-1.477.609-1.477 1.406 0 .82.61 1.476 1.477 1.476zm0 8.18h8.414c.82 0 1.453-.633 1.453-1.43 0-.82-.633-1.453-1.453-1.453H19.14c-.867 0-1.477.633-1.477 1.453 0 .797.61 1.43 1.477 1.43z"/></svg>`,
+  heart:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`,
+};
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+function attachEvents(){
+  document.getElementById('app').addEventListener('click',handleClick);
+  // Close modal when clicking the overlay background
+  const ov=document.getElementById('modalOverlay');
+  if(ov) ov.addEventListener('click',e=>{if(e.target===ov){S.modal=null;render();}});
+  const si=document.getElementById('searchInput');
+  if(si){
+    si.addEventListener('input',e=>{S.f.search=e.target.value;render();});
+    si.addEventListener('keydown',e=>{if(e.key==='Escape'&&S.f.search){S.f.search='';render();}});
+  }
+  const ss=document.getElementById('sortSel');
+  if(ss) ss.addEventListener('change',e=>{S.sort=e.target.value;render();});
+}
+
+function handleClick(e){
+  if(e.target.closest('a[href]')) return;
+  const el=e.target.closest('[data-a]');
+  if(!el) return;
+  const a=el.dataset.a;
+  if(a==='view'){S.view=el.dataset.v;S.selId=null;render();}
+  else if(a==='toggleView'){S.view=S.view==='list'?'cal':'list';S.selId=null;render();}
+  else if(a==='nav'){const n=el.dataset.n;S.nav=n;S.f.active=n==='open';if(window.innerWidth<=640)S.sbOpen=false;render();}
+  else if(a==='fcat'){
+    const k=el.dataset.k;
+    if(S.f.cat.has(k))S.f.cat.delete(k);else S.f.cat.add(k);
+    render();
+  }
+  else if(a==='resetCat'){S.f.cat.clear();render();}
+  else if(a==='resetFilters'){S.f.cat.clear();S.f.loc='all';S.f.fee='all';S.f.dl='all';S.f.search='';render();}
+  else if(a==='fc'){S.f[el.dataset.k]=el.dataset.v;if(window.innerWidth<=640)S.sbOpen=false;render();}
+  else if(a==='toggleSb'){S.sbOpen=!S.sbOpen;render();}
+  else if(a==='closeSb'){S.sbOpen=false;render();}
+  else if(a==='toggleActive'){S.f.active=!S.f.active;S.nav=S.f.active?'open':'all';if(window.innerWidth<=640)S.sbOpen=false;render();}
+  else if(a==='toggleSel'){S.selMode=!S.selMode;if(!S.selMode)S.selected.clear();if(window.innerWidth<=640&&S.selMode)S.sbOpen=false;render();}
+  else if(a==='toggleTheme'){S.theme=S.theme==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',S.theme);localStorage.setItem('pell_theme',S.theme);render();}
+  else if(a==='pick'){e.stopPropagation();if(S.selMode){toggleSel(el.dataset.id);return;}S.selId=S.selId===el.dataset.id?null:el.dataset.id;render();}
+  else if(a==='chk'){e.stopPropagation();toggleSel(el.dataset.id);}
+  else if(a==='closedp'){S.selId=null;render();}
+  else if(a==='copyone'){const o=DB.find(x=>x.id===el.dataset.id);if(o)copyText(exportText(o)).then(()=>toast('Copied!')).catch(()=>toast('Copy failed — try selecting text manually'));}
+  else if(a==='exportPDF'){exportPDF(S.selected);}
+  else if(a==='clearSel'){S.selected.clear();render();}
+  else if(a==='calGoto'){S.calM=parseInt(el.dataset.m);S.calY=parseInt(el.dataset.y);render();}
+  else if(a==='calAgoPrev'){S.calM--;if(S.calM<0){S.calY--;S.calM=11;}render();}
+  else if(a==='calAgoNext'){S.calM++;if(S.calM>11){S.calY++;S.calM=0;}render();}
+  else if(a==='cprev'){S.calM-=S.calZ;if(S.calM<0){S.calY--;S.calM+=12;}render();}
+  else if(a==='cnext'){S.calM+=S.calZ;if(S.calM>11){S.calY++;S.calM-=12;}render();}
+  else if(a==='ctoday'){S.calM=new Date().getMonth();S.calY=new Date().getFullYear();render();}
+  else if(a==='czoom'){S.calZ=parseInt(el.dataset.z);render();}
+  else if(a==='openModal'){S.modal=el.dataset.m;render();}
+  else if(a==='closeModal'){S.modal=null;render();}
+  else if(a==='contributor'){
+    const mailto='mailto:hello@pellicule.film?subject=Pellicule%20Contributor';
+    // Try location.href first, fall back to copying email
+    try{ window.location.href=mailto; }
+    catch(e){
+      copyText('hello@pellicule.film').then(()=>toast('Email copied: hello@pellicule.film'));
+    }
+  }
+}
+
+function toggleSel(id){
+  if(S.selected.has(id))S.selected.delete(id);
+  else{S.selected.add(id);if(!S.selMode)S.selMode=true;}
+  render();
+}
+
+function submitSuggest(){
+  const name=document.getElementById('sg-name')?.value.trim();
+  const web=document.getElementById('sg-web')?.value.trim();
+  const cat=document.getElementById('sg-cat')?.value;
+  if(!name||!web||!cat){toast('Please fill in the required fields ✦');return;}
+  const dl=document.getElementById('sg-dl')?.value.trim();
+  const grant=document.getElementById('sg-grant')?.value.trim();
+  const types=document.getElementById('sg-types')?.value.trim();
+  const loc=document.getElementById('sg-loc')?.value.trim();
+  const notes=document.getElementById('sg-notes')?.value.trim();
+  const body=`PELLICULE — New Opportunity Suggestion\n\nName: ${name}\nCategory: ${cat}\nWebsite: ${web}\nDeadline: ${dl||'—'}\nGrant/Award: ${grant||'—'}\nTypes: ${types||'—'}\nLocation: ${loc||'—'}\nNotes: ${notes||'—'}`;
+  // Copy to clipboard as fallback (email client may not be set up)
+  copyText(body).then(()=>{
+    toast('Details copied — please email them to hello@pellicule.film',4000);
+    S.modal=null;render();
+  }).catch(()=>{
+    // Try mailto as a last resort
+    window.location.href=`mailto:hello@pellicule.film?subject=PELLICULE+Suggestion:+${encodeURIComponent(name)}&body=${encodeURIComponent(body)}`;
+    S.modal=null;render();
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function debounce(fn,ms){let t;return(...args)=>{clearTimeout(t);t=setTimeout(()=>fn(...args),ms);};}
+render();
+// Re-render when crossing mobile breakpoint (fixes stuck calendar view)
+let _wasMobile=window.innerWidth<=640;
+window.addEventListener('resize',debounce(()=>{
+  const isMobile=window.innerWidth<=640;
+  if(isMobile!==_wasMobile){_wasMobile=isMobile;render();}
+},120));
+</script>
+</body>
+</html>
