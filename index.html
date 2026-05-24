@@ -967,7 +967,7 @@ function infoModal(){
       </div>
       <div class="support-box">
         ${I.heart()}
-        <p>PELLICULE is free and ad-free, maintained by one filmmaker in their spare time.<br>If it's useful to you, <a href="https://pellicule.gumroad.com" target="_blank" rel="noopener">a small contribution via Gumroad</a> helps keep it running and updated.</p>
+        <p>PELLICULE is free and ad-free, maintained by one filmmaker in their spare time.<br>If it's useful to you, <a href="https://dojissa.gumroad.com/l/pellicule" target="_blank" rel="noopener">a small contribution via Gumroad</a> helps keep it running and updated.</p>
       </div>
       <div style="margin-top:12px;text-align:center">
         <button class="contrib-btn" data-a="contributor">Become a contributor</button>
@@ -1110,11 +1110,11 @@ function handleClick(e){
   else if(a==='openModal'){S.modal=el.dataset.m;render();}
   else if(a==='closeModal'){S.modal=null;render();}
   else if(a==='contributor'){
-    const mailto='mailto:hello@pellicule.film?subject=Pellicule%20Contributor';
+    const mailto='mailto:hello@pellicule.me?subject=Pellicule%20Contributor';
     // Try location.href first, fall back to copying email
     try{ window.location.href=mailto; }
     catch(e){
-      copyText('hello@pellicule.film').then(()=>toast('Email copied: hello@pellicule.film'));
+      copyText('hello@pellicule.me').then(()=>toast('Email copied: hello@pellicule.me'));
     }
   }
 }
@@ -1138,11 +1138,11 @@ function submitSuggest(){
   const body=`PELLICULE — New Opportunity Suggestion\n\nName: ${name}\nCategory: ${cat}\nWebsite: ${web}\nDeadline: ${dl||'—'}\nGrant/Award: ${grant||'—'}\nTypes: ${types||'—'}\nLocation: ${loc||'—'}\nNotes: ${notes||'—'}`;
   // Copy to clipboard as fallback (email client may not be set up)
   copyText(body).then(()=>{
-    toast('Details copied — please email them to hello@pellicule.film',4000);
+    toast('Details copied — please email them to hello@pellicule.me',4000);
     S.modal=null;render();
   }).catch(()=>{
     // Try mailto as a last resort
-    window.location.href=`mailto:hello@pellicule.film?subject=PELLICULE+Suggestion:+${encodeURIComponent(name)}&body=${encodeURIComponent(body)}`;
+    window.location.href=`mailto:hello@pellicule.me?subject=PELLICULE+Suggestion:+${encodeURIComponent(name)}&body=${encodeURIComponent(body)}`;
     S.modal=null;render();
   });
 }
