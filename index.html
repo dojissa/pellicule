@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-<meta property="og:title" content="PELLICULE — Film Opportunities Directory"/>
-<meta property="og:description" content="A free directory of grants, labs, residencies, co-productions and festivals for independent filmmakers. No login, no ads."/>
-<meta property="og:image" content="https://pellicule.me/og.png"/>
-<meta property="og:url" content="https://pellicule.me"/>
-<meta property="og:type" content="website"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="PELLICULE — Film Opportunities Directory"/>
-<meta name="twitter:description" content="A free directory of film opportunities for independent filmmakers — grants, labs, residencies, co-productions and festivals in one place."/>
-<meta name="twitter:image" content="https://pellicule.me/og.png"/>
-<meta name="description" content="A free directory of grants, labs, residencies, co-productions and festivals for independent filmmakers."/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PELLICULE — Film Opportunities</title>
@@ -351,6 +341,17 @@ header{display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px
 </style>
 </head>
 <body>
+<!-- Hidden form — Netlify detects this at build time to enable form submissions -->
+<form name="suggest" data-netlify="true" hidden>
+  <input type="text" name="name">
+  <input type="text" name="category">
+  <input type="url"  name="website">
+  <input type="text" name="deadline">
+  <input type="text" name="grant">
+  <input type="text" name="types">
+  <input type="text" name="location">
+  <input type="text" name="notes">
+</form>
 <div id="app"></div>
 <div id="printModal"></div>
 <div class="toast" id="toast"></div>
@@ -977,7 +978,7 @@ function infoModal(){
       </div>
       <div class="support-box">
         ${I.heart()}
-        <p>PELLICULE is free and ad-free, maintained by one filmmaker in their spare time.<br>If it's useful to you, <a href="https://dojissa.gumroad.com/coffee" target="_blank" rel="noopener">a small contribution via Gumroad</a> helps keep it running and updated.</p>
+        <p>PELLICULE is free and ad-free, maintained by one filmmaker in their spare time.<br>If it's useful to you, <a href="https://pellicule.gumroad.com" target="_blank" rel="noopener">a small contribution via Gumroad</a> helps keep it running and updated.</p>
       </div>
       <div style="margin-top:12px;text-align:center">
         <button class="contrib-btn" data-a="contributor">Become a contributor</button>
@@ -1120,11 +1121,11 @@ function handleClick(e){
   else if(a==='openModal'){S.modal=el.dataset.m;render();}
   else if(a==='closeModal'){S.modal=null;render();}
   else if(a==='contributor'){
-    const mailto='mailto:hello@pellicule.me?subject=Pellicule%20Contributor';
+    const mailto='mailto:hello@pellicule.film?subject=Pellicule%20Contributor';
     // Try location.href first, fall back to copying email
     try{ window.location.href=mailto; }
     catch(e){
-      copyText('hello@pellicule.me').then(()=>toast('Email copied: hello@pellicule.me'));
+      copyText('hello@pellicule.film').then(()=>toast('Email copied: hello@pellicule.film'));
     }
   }
 }
@@ -1138,23 +1139,38 @@ function toggleSel(id){
 function submitSuggest(){
   const name=document.getElementById('sg-name')?.value.trim();
   const web=document.getElementById('sg-web')?.value.trim();
-  const cat=document.getElementById('sg-cat')?.value;
-  if(!name||!web||!cat){toast('Please fill in the required fields ✦');return;}
-  const dl=document.getElementById('sg-dl')?.value.trim();
-  const grant=document.getElementById('sg-grant')?.value.trim();
-  const types=document.getElementById('sg-types')?.value.trim();
-  const loc=document.getElementById('sg-loc')?.value.trim();
-  const notes=document.getElementById('sg-notes')?.value.trim();
-  const body=`PELLICULE — New Opportunity Suggestion\n\nName: ${name}\nCategory: ${cat}\nWebsite: ${web}\nDeadline: ${dl||'—'}\nGrant/Award: ${grant||'—'}\nTypes: ${types||'—'}\nLocation: ${loc||'—'}\nNotes: ${notes||'—'}`;
-  // Copy to clipboard as fallback (email client may not be set up)
-  copyText(body).then(()=>{
-    toast('Details copied — please email them to hello@pellicule.me',4000);
-    S.modal=null;render();
-  }).catch(()=>{
-    // Try mailto as a last resort
-    window.location.href=`mailto:hello@pellicule.me?subject=PELLICULE+Suggestion:+${encodeURIComponent(name)}&body=${encodeURIComponent(body)}`;
-    S.modal=null;render();
+  const catVal=document.getElementById('sg-cat')?.value;
+  if(!name||!web||!catVal){toast('Please fill in the required fields ✦');return;}
+  const dl=document.getElementById('sg-dl')?.value.trim()||'';
+  const grant=document.getElementById('sg-grant')?.value.trim()||'';
+  const types=document.getElementById('sg-types')?.value.trim()||'';
+  const loc=document.getElementById('sg-loc')?.value.trim()||'';
+  const notes=document.getElementById('sg-notes')?.value.trim()||'';
+
+  // POST to Netlify Forms
+  const params=new URLSearchParams({
+    'form-name':'suggest',
+    name,category:catVal,website:web,
+    deadline:dl,grant,types,location:loc,notes
   });
+
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:params.toString()})
+    .then(res=>{
+      if(res.ok){
+        toast('Suggestion sent — thank you!',3000);
+        S.modal=null;render();
+      } else {
+        throw new Error('Netlify form error');
+      }
+    })
+    .catch(()=>{
+      // Fallback: copy to clipboard + mailto
+      const body=`PELLICULE Suggestion\n\nName: ${name}\nCategory: ${catVal}\nWebsite: ${web}\nDeadline: ${dl||'—'}\nGrant: ${grant||'—'}\nTypes: ${types||'—'}\nLocation: ${loc||'—'}\nNotes: ${notes||'—'}`;
+      copyText(body)
+        .then(()=>toast('Copied — please email to hello@pellicule.me',4000))
+        .catch(()=>{window.location.href=`mailto:hello@pellicule.me?subject=PELLICULE+Suggestion:+${encodeURIComponent(name)}&body=${encodeURIComponent(body)}`;});
+      S.modal=null;render();
+    });
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
