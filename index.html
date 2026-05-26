@@ -1121,13 +1121,11 @@ function handleClick(e){
   else if(a==='openModal'){S.modal=el.dataset.m;render();}
   else if(a==='closeModal'){S.modal=null;render();}
   else if(a==='contributor'){
-    const mailto='mailto:hello@pellicule.film?subject=Pellicule%20Contributor';
-    // Try location.href first, fall back to copying email
+    const mailto='mailto:hello@pellicule.me?subject=Pellicule%20Contributor';
     try{ window.location.href=mailto; }
-    catch(e){
-      copyText('hello@pellicule.film').then(()=>toast('Email copied: hello@pellicule.film'));
-    }
+    catch(e){ copyText('hello@pellicule.me').then(()=>toast('Email copied: hello@pellicule.me')); }
   }
+  else if(a==='submitSuggest'){submitSuggest();}
 }
 
 function toggleSel(id){
