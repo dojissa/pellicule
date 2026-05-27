@@ -978,10 +978,11 @@ function infoModal(){
       </div>
       <div class="support-box">
         ${I.heart()}
-        <p>PELLICULE is free and ad-free, maintained by one filmmaker in their spare time.<br>If it's useful to you, <a href="https://pellicule.gumroad.com" target="_blank" rel="noopener">a small contribution via Gumroad</a> helps keep it running and updated.</p>
+        <p>PELLICULE is free and ad-free, maintained by one filmmaker in their spare time.<br>If it's useful to you, <a href="https://dojissa.gumroad.com/coffee" target="_blank" rel="noopener">a small contribution via Gumroad</a> helps keep it running and updated.</p>
       </div>
-      <div style="margin-top:12px;text-align:center">
+      <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
         <button class="contrib-btn" data-a="contributor">Become a contributor</button>
+        <button class="contrib-btn" data-a="getintouch">Get in touch</button>
       </div>
     </div>
   </div>`;
@@ -1125,6 +1126,11 @@ function handleClick(e){
     try{ window.location.href=mailto; }
     catch(e){ copyText('hello@pellicule.me').then(()=>toast('Email copied: hello@pellicule.me')); }
   }
+  else if(a==='getintouch'){
+    const mailto='mailto:hello@pellicule.me?subject=Hello';
+    try{ window.location.href=mailto; }
+    catch(e){ copyText('hello@pellicule.me').then(()=>toast('Email copied: hello@pellicule.me')); }
+  }
   else if(a==='submitSuggest'){submitSuggest();}
 }
 
@@ -1145,9 +1151,21 @@ function submitSuggest(){
   const loc=document.getElementById('sg-loc')?.value.trim()||'';
   const notes=document.getElementById('sg-notes')?.value.trim()||'';
 
-  // POST to Netlify Forms
+  // One-line summary that reads nicely in the email notification
+  const summary=[
+    `Name: ${name}`,
+    `Category: ${catVal}`,
+    `Website: ${web}`,
+    dl&&`Deadline: ${dl}`,
+    grant&&`Grant: ${grant}`,
+    types&&`Types: ${types}`,
+    loc&&`Location: ${loc}`,
+    notes&&`Notes: ${notes}`,
+  ].filter(Boolean).join(' · ');
+
   const params=new URLSearchParams({
     'form-name':'suggest',
+    '---Summary':summary,
     name,category:catVal,website:web,
     deadline:dl,grant,types,location:loc,notes
   });
@@ -1157,16 +1175,13 @@ function submitSuggest(){
       if(res.ok){
         toast('Suggestion sent — thank you!',3000);
         S.modal=null;render();
-      } else {
-        throw new Error('Netlify form error');
-      }
+      } else { throw new Error(); }
     })
     .catch(()=>{
-      // Fallback: copy to clipboard + mailto
-      const body=`PELLICULE Suggestion\n\nName: ${name}\nCategory: ${catVal}\nWebsite: ${web}\nDeadline: ${dl||'—'}\nGrant: ${grant||'—'}\nTypes: ${types||'—'}\nLocation: ${loc||'—'}\nNotes: ${notes||'—'}`;
+      const body=`PELLICULE Suggestion\n\n${summary}`;
       copyText(body)
         .then(()=>toast('Copied — please email to hello@pellicule.me',4000))
-        .catch(()=>{window.location.href=`mailto:hello@pellicule.me?subject=PELLICULE+Suggestion:+${encodeURIComponent(name)}&body=${encodeURIComponent(body)}`;});
+        .catch(()=>{window.location.href=`mailto:hello@pellicule.me?subject=PELLICULE+Suggestion:+${encodeURIComponent(name)}&body=${encodeURIComponent(summary)}`;});
       S.modal=null;render();
     });
 }
